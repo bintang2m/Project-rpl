@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSense - Input Data Sensor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #8BC34A;
+            --background: #F1F8E9;
+            --card-bg: #FFFFFF;
+            --text: #2E7D32;
+            --text-light: #81C784;
+            --error: #F44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .overlay {
+            background-color: rgba(241, 248, 233, 0.9);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            flex: 1;
+            width: 100%;
+        }
+        
+        .dashboard-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-title h2 {
+            font-size: 1.8rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .sensor-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+            border-left: 5px solid var(--primary);
+        }
+        
+        .sensor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+        
+        .sensor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .sensor-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sensor-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .sensor-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-end;
+        }
+        
+        .sensor-unit {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-left: 5px;
+            font-weight: 400;
+        }
+        
+        .sensor-input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .sensor-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+        }
+        
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .notification {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .notification.show {
+            display: block;
+        }
+        
+        .success {
+            background-color: #E8F5E9;
+            color: var(--primary-dark);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .error {
+            background-color: #FFEBEE;
+            color: var(--error);
+            border-left: 4px solid var(--error);
+        }
+        
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay">
+        <header>
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <h1>AgriSense</h1>
+            </div>
+            <div class="user-info">
+                <span><i class="fas fa-user"></i> Petani Budi</span>
+            </div>
+        </header>
+        
+        <div class="container">
+            <div class="dashboard-title">
+                <h2><i class="fas fa-tractor"></i> Input Data Sensor</h2>
+                <div class="date-time">
+                    <span id="current-date"></span>
+                </div>
+            </div>
+            
+            <form id="sensor-form">
+                <div class="card-grid">
+                    <!-- Sensor Suhu -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-temperature-high"></i>
+                                </div>
+                                <span>Suhu Udara</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <input type="number" id="temperature" class="sensor-input" placeholder="Masukkan suhu (°C)" step="0.1" required>
+                        </div>
+                        
+                        <div id="temp-notification" class="notification"></div>
+                    </div>
+                    
+                    <!-- Sensor Kelembaban -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-tint"></i>
+                                </div>
+                                <span>Kelembaban</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <input type="number" id="humidity" class="sensor-input" placeholder="Masukkan kelembaban (%)" min="0" max="100" required>
+                        </div>
+                        
+                        <div id="humidity-notification" class="notification"></div>
+                    </div>
+                    
+                    <!-- Sensor pH Tanah -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <span>pH Tanah</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <input type="number" id="ph" class="sensor-input" placeholder="Masukkan pH tanah (0-14)" min="0" max="14" step="0.1" required>
+                        </div>
+                        
+                        <div id="ph-notification" class="notification"></div>
+                    </div>
+                    
+                    <!-- Sensor Cahaya -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-sun"></i>
+                                </div>
+                                <span>Intensitas Cahaya</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <input type="number" id="light" class="sensor-input" placeholder="Masukkan intensitas (lux)" min="0" required>
+                        </div>
+                        
+                        <div id="light-notification" class="notification"></div>
+                    </div>
+                    
+                    <!-- Sensor Kelembaban Tanah -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <span>Kelembaban Tanah</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <input type="number" id="soil-moisture" class="sensor-input" placeholder="Masukkan kelembaban tanah (%)" min="0" max="100" required>
+                        </div>
+                        
+                        <div id="soil-notification" class="notification"></div>
+                    </div>
+                    
+                    <!-- Lokasi -->
+                    <div class="sensor-card">
+                        <div class="sensor-header">
+                            <div class="sensor-title">
+                                <div class="sensor-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <span>Lokasi Lahan</span>
+                            </div>
+                        </div>
+                        
+                        <div class="sensor-value">
+                            <select id="location" class="sensor-input" required>
+                                <option value="">Pilih lokasi lahan</option>
+                                <option value="Lahan Utara">Lahan Utara</option>
+                                <option value="Lahan Selatan">Lahan Selatan</option>
+                                <option value="Lahan Timur">Lahan Timur</option>
+                                <option value="Lahan Barat">Lahan Barat</option>
+                                <option value="Rumah Kaca">Rumah Kaca</option>
+                            </select>
+                        </div>
+                        
+                        <div id="location-notification" class="notification"></div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; max-width: 300px; margin-left: auto;">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-save"></i> Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 AgriSense - Sistem Monitoring Pertanian</p>
+        </footer>
+    </div>
+
+    <script>
+        // Update tanggal dan waktu
+        function updateDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
+        }
+        
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+        
+        // Validasi form
+        document.getElementById('sensor-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            // Validasi suhu
+            const tempInput = document.getElementById('temperature');
+            const tempNotification = document.getElementById('temp-notification');
+            if (!tempInput.value) {
+                tempNotification.textContent = 'Harap masukkan suhu udara';
+                tempNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                tempNotification.className = 'notification';
+            }
+            
+            // Validasi kelembaban
+            const humidityInput = document.getElementById('humidity');
+            const humidityNotification = document.getElementById('humidity-notification');
+            if (!humidityInput.value) {
+                humidityNotification.textContent = 'Harap masukkan kelembaban udara';
+                humidityNotification.className = 'notification error show';
+                isValid = false;
+            } else if (humidityInput.value < 0 || humidityInput.value > 100) {
+                humidityNotification.textContent = 'Kelembaban harus antara 0-100%';
+                humidityNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                humidityNotification.className = 'notification';
+            }
+            
+            // Validasi pH tanah
+            const phInput = document.getElementById('ph');
+            const phNotification = document.getElementById('ph-notification');
+            if (!phInput.value) {
+                phNotification.textContent = 'Harap masukkan pH tanah';
+                phNotification.className = 'notification error show';
+                isValid = false;
+            } else if (phInput.value < 0 || phInput.value > 14) {
+                phNotification.textContent = 'pH harus antara 0-14';
+                phNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                phNotification.className = 'notification';
+            }
+            
+            // Validasi intensitas cahaya
+            const lightInput = document.getElementById('light');
+            const lightNotification = document.getElementById('light-notification');
+            if (!lightInput.value) {
+                lightNotification.textContent = 'Harap masukkan intensitas cahaya';
+                lightNotification.className = 'notification error show';
+                isValid = false;
+            } else if (lightInput.value < 0) {
+                lightNotification.textContent = 'Intensitas cahaya tidak boleh negatif';
+                lightNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                lightNotification.className = 'notification';
+            }
+            
+            // Validasi kelembaban tanah
+            const soilInput = document.getElementById('soil-moisture');
+            const soilNotification = document.getElementById('soil-notification');
+            if (!soilInput.value) {
+                soilNotification.textContent = 'Harap masukkan kelembaban tanah';
+                soilNotification.className = 'notification error show';
+                isValid = false;
+            } else if (soilInput.value < 0 || soilInput.value > 100) {
+                soilNotification.textContent = 'Kelembaban tanah harus antara 0-100%';
+                soilNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                soilNotification.className = 'notification';
+            }
+            
+            // Validasi lokasi
+            const locationInput = document.getElementById('location');
+            const locationNotification = document.getElementById('location-notification');
+            if (!locationInput.value) {
+                locationNotification.textContent = 'Harap pilih lokasi lahan';
+                locationNotification.className = 'notification error show';
+                isValid = false;
+            } else {
+                locationNotification.className = 'notification';
+            }
+            
+            // Jika semua valid, tampilkan notifikasi sukses
+            if (isValid) {
+                alert('Data sensor berhasil disimpan!');
+                this.reset();
+                
+                // Tampilkan notifikasi sukses di semua field
+                const notifications = document.querySelectorAll('.notification');
+                notifications.forEach(notif => {
+                    notif.textContent = '✓ Data valid';
+                    notif.className = 'notification success show';
+                    setTimeout(() => {
+                        notif.className = 'notification';
+                    }, 3000);
+                });
+            }
+        });
+        
+        // Validasi real-time untuk setiap input
+        document.querySelectorAll('.sensor-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const notificationId = this.id + '-notification';
+                const notification = document.getElementById(notificationId);
+                
+                if (notification) {
+                    notification.className = 'notification';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
