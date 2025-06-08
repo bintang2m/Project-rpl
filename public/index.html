@@ -9,8 +9,150 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/src/style/main.css">
+    <!-- <link rel="stylesheet" href="/src/style/main.css"> -->
     <style>
+
+                :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #8BC34A;
+            --dark-color: #2E7D32;
+            --light-color: #C8E6C9;
+            --danger-color: #F44336;
+            --warning-color: #FFC107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            width: 100%;
+        }
+        
+        .sidebar {
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+        }
+
+
+         .sidebar img {
+            /* position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            top: 0;
+            left: 0; */
+            width: 60px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .alert-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+        
+        .alert-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .img-profile{
+            width: 30px;
+            height: 30px;
+            background: red;
+            overflow: hidden;
+            display: relative;
+            z-index: -100;
+        }
+
+        .img-profile img{
+            background-color: blue;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .bg-success-light {
+            background-color: var(--light-color);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .sensor-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .sensor-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
        
     </style>
 </head>
@@ -19,7 +161,7 @@
         <!-- Sidebar -->
         <div class="sidebar p-3" id="sidebar">
             <div class="d-flex align-items-center mb-4">
-                <img src="/src/images/logo-4x4.png" alt="">
+                <img src="./src/images/logo-4x4.png" alt="">
 
                 <h4 class="m-0">AgriMonitor</h4>
                 <button class="btn btn-sm btn-outline-light ms-auto d-md-none" id="sidebarToggle">
@@ -72,7 +214,7 @@
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle gap-2" id="dropdownUser" data-bs-toggle="dropdown">
                     <div class="img-profile rounded-circle">
-                        <img src="/src/images/logo.png" alt="Profile" class="rounded-circle me-2 profile-img ">
+                        <img src="./src/images/logo.png" alt="Profile" class="rounded-circle me-2 profile-img ">
                     </div>
                     <strong>Admin User</strong>
                 </a>
@@ -360,59 +502,16 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-hover" id="tabel-lahan">
                                     <thead>
                                         <tr>
-                                            <th>Nama Lahan</th>
-                                            <th>Lokasi</th>
-                                            <th>Luas</th>
-                                            <th>Jenis Tanaman</th>
-                                            <th>Jenis Tanah</th>
-                                            <th>Status</th>
-                                            <th>Aksi</th>
+                                        <th>Nama Lahan</th><th>Lokasi</th><th>Luas</th>
+                                        <th>Jenis Tanaman</th><th>Jenis Tanah</th><th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Lahan A</td>
-                                            <td>-6.12345, 106.12345</td>
-                                            <td>2.5 Ha</td>
-                                            <td>Padi</td>
-                                            <td>Latosol</td>
-                                            <td><span class="status-badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Lahan B</td>
-                                            <td>-6.12346, 106.12346</td>
-                                            <td>1.8 Ha</td>
-                                            <td>Jagung</td>
-                                            <td>Andosol</td>
-                                            <td><span class="status-badge bg-success">Aktif</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Lahan C</td>
-                                            <td>-6.12347, 106.12347</td>
-                                            <td>3.2 Ha</td>
-                                            <td>Kedelai</td>
-                                            <td>Regosol</td>
-                                            <td><span class="status-badge bg-warning">Maintenance</span></td>
-                                            <td>
-                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>
                                     </tbody>
+                                    
                                 </table>
                             </div>
                             
@@ -656,7 +755,7 @@
                                     </div>
                                     
                                     <div class="text-center mb-3">
-                                        <img src="/src/images/hama_1.png" class="img-fluid rounded mb-3" alt="Plant Disease" style="width: 400px;">
+                                        <img src="/" class="img-fluid rounded mb-3" alt="Plant Disease" style="width: 400px;">
                                         <h5>Kemungkinan: Kutu Daun</h5>
                                         <p class="text-muted">Ditemukan pada 24 Mei 2025 10:15 WIB</p>
                                     </div>
@@ -1282,7 +1381,7 @@
     
     <!-- Modals -->
     <!-- Add Land Modal -->
-    <div class="modal fade" id="addLandModal" tabindex="-1" aria-labelledby="addLandModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addLandModal" tabindex="-1" aria-labelledby="addLandModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
@@ -1290,16 +1389,16 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="./auth/land.php" method="post" class="formTambahLahan" id="landForm">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Nama Lahan</label>
-                                <input type="text" class="form-control" placeholder="Contoh: Lahan A">
+                                <input type="text" class="form-control" placeholder="Contoh: Lahan A" name="nama_lahan" >
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Luas Lahan</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Contoh: 2.5">
+                                    <input type="number" class="form-control" placeholder="Contoh: 2.5" name="luas">
                                     <span class="input-group-text">Hektar</span>
                                 </div>
                             </div>
@@ -1308,7 +1407,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Jenis Tanaman</label>
-                                <select class="form-select">
+                                <select class="form-select" name="jenis_tanaman">
                                     <option selected>Pilih Jenis Tanaman</option>
                                     <option>Padi</option>
                                     <option>Jagung</option>
@@ -1320,7 +1419,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Jenis Tanah</label>
-                                <select class="form-select">
+                                <select class="form-select" name="jenis_tanah">
                                     <option selected>Pilih Jenis Tanah</option>
                                     <option>Latosol</option>
                                     <option>Andosol</option>
@@ -1335,24 +1434,24 @@
                             <label class="form-label">Lokasi (Koordinat GPS)</label>
                             <div class="input-group mb-2">
                                 <span class="input-group-text">Latitude</span>
-                                <input type="text" class="form-control" placeholder="-6.12345">
+                                <input type="text" class="form-control" placeholder="-6.12345" name="Latitude">
                                 <span class="input-group-text">Longitude</span>
-                                <input type="text" class="form-control" placeholder="106.12345">
+                                <input type="text" class="form-control" placeholder="106.12345" name="Longitude">
                             </div>
-                            <button type="button" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-map-marker-alt me-2"></i>Dapatkan Lokasi Sekarang
-                            </button>
+                            <div class="mb-3">
+                                <label class="form-label">Catatan Tambahan</label>
+                                <textarea class="form-control" name="catatan" rows="3" placeholder="Deskripsi lahan atau catatan khusus"></textarea>
+                            </div>
                         </div>
                         
-                        <div class="mb-3">
-                            <label class="form-label">Catatan Tambahan</label>
-                            <textarea class="form-control" rows="3" placeholder="Deskripsi lahan atau catatan khusus"></textarea>
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-map-marker-alt me-2"></i>Dapatkan Lokasi Sekarang
+                        </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Lahan</button>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary">Simpan Lahan</button>
                 </div>
             </div>
         </div>
@@ -1901,6 +2000,16 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom Script -->
     <script>
+
+        // When showing modal
+        document.getElementById('addLandModal').addEventListener('shown.bs.modal', function() {
+        this.removeAttribute('aria-hidden');
+        });
+
+        // When hiding modal
+        document.getElementById('addLandModal').addEventListener('hide.bs.modal', function() {
+        this.setAttribute('aria-hidden', 'true');
+        });
         // Sidebar Toggle
         document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -2071,6 +2180,52 @@
             realtimeData.push(Math.floor(Math.random() * 10) + 25);
             realtimeChart.update();
         }, 2000);
+
+
+        
     </script>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            fetch('./auth/get_land.php') // sesuaikan path-nya dengan posisi file ini
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#tabel-lahan tbody').innerHTML = data;
+                })
+                .catch(error => console.error('Gagal memuat data lahan:', error));
+        });
+    </script>
+
+
+    <!-- <script>
+    function tambahKeTabelLahan(data) {
+        const tbody = document.querySelector('#tabel-lahan tbody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${data.nama_lahan}</td>
+            <td>${data.lokasi}</td>
+            <td>${data.luas}</td>
+            <td>${data.jenis_tanaman}</td>
+            <td>${data.jenis_tanah}</td>
+            <td>${data.status}</td>
+        `;
+
+        tbody.appendChild(row);
+    }
+
+    // Contoh pemanggilan (setelah sukses kirim form via JS/AJAX):
+    tambahKeTabelLahan({
+        nama_lahan: "Lahan A",
+        lokasi: "Desa Selopanggung",
+        luas: "1000",
+        jenis_tanaman: "Padi",
+        jenis_tanah: "Lempung",
+        status: "Aktif"
+    });
+    </script> -->
+
+
+
 </body>
 </html>
