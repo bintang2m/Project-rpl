@@ -227,6 +227,8 @@
             </div>
         </div>
         
+        
+        
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
             <!-- Top Navigation -->
@@ -262,7 +264,7 @@
             <div class="tab-content">
                 <!-- Dashboard Tab -->
                 <div class="tab-pane fade show active" id="dashboard">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    <!-- <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2 class="mb-0">Dashboard</h2>
                         <div>
                             <select class="form-select form-select-sm w-auto d-inline-block">
@@ -273,7 +275,16 @@
                             </select>
                         </div>
                     </div>
-                    
+                     -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Dashboard</h2>
+                        <div>
+                            <select id="fieldSelect-dashboard" class="form-select form-select-sm w-auto d-inline-block">
+                                <option value="all">Semua Lahan</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                    </div>
                     <!-- Alerts Section -->
                     <div class="row mb-4">
                         <div class="col-md-4">
@@ -301,7 +312,7 @@
                         <div class="col-md-3">
                             <div class="card bg-success-light">
                                 <div class="card-body text-center">
-                                    <div class="sensor-value">28°C</div>
+                                    <div class="sensor-value sensor-value-suhu">28°C</div>
                                     <div class="sensor-label">Suhu Rata-rata</div>
                                     <i class="fas fa-temperature-high fa-2x mt-2 text-success"></i>
                                 </div>
@@ -310,7 +321,7 @@
                         <div class="col-md-3">
                             <div class="card bg-success-light">
                                 <div class="card-body text-center">
-                                    <div class="sensor-value">65%</div>
+                                    <div class="sensor-value sensor-value-lembab">65%</div>
                                     <div class="sensor-label">Kelembaban Tanah</div>
                                     <i class="fas fa-water fa-2x mt-2 text-primary"></i>
                                 </div>
@@ -319,7 +330,7 @@
                         <div class="col-md-3">
                             <div class="card bg-success-light">
                                 <div class="card-body text-center">
-                                    <div class="sensor-value">1200</div>
+                                    <div class="sensor-value sensor-value-cahaya">1200</div>
                                     <div class="sensor-label">Lux Cahaya</div>
                                     <i class="fas fa-sun fa-2x mt-2 text-warning"></i>
                                 </div>
@@ -328,7 +339,7 @@
                         <div class="col-md-3">
                             <div class="card bg-success-light">
                                 <div class="card-body text-center">
-                                    <div class="sensor-value">7.2</div>
+                                    <div class="sensor-value sensor-value-tanah">7.2</div>
                                     <div class="sensor-label">pH Tanah</div>
                                     <i class="fas fa-flask fa-2x mt-2 text-info"></i>
                                 </div>
@@ -364,7 +375,7 @@
                                     <i class="fas fa-map-marked-alt me-2"></i> Status Lahan
                                 </div>
                                 <div class="card-body">
-                                    <div class="list-group">
+                                    <div id="landStatusList" class="list-group">
                                         <div class="list-group-item d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6 class="mb-1">Lahan A</h6>
@@ -409,19 +420,19 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row text-center">
-                                        <div class="col">
+                                        <div class="col weatering">
                                             <h6>Hari Ini</h6>
                                             <i class="fas fa-sun fa-2x text-warning"></i>
                                             <div>32°C / 24°C</div>
                                             <small class="text-muted">Cerah</small>
                                         </div>
-                                        <div class="col">
+                                        <div class="col weatering">
                                             <h6>Besok</h6>
                                             <i class="fas fa-cloud-sun fa-2x text-secondary"></i>
                                             <div>30°C / 25°C</div>
                                             <small class="text-muted">Berawan</small>
                                         </div>
-                                        <div class="col">
+                                        <div class="col weatering">
                                             <h6>Lusa</h6>
                                             <i class="fas fa-cloud-rain fa-2x text-primary"></i>
                                             <div>28°C / 23°C</div>
@@ -494,7 +505,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-list me-2"></i> Daftar Lahan</span>
                             <div class="input-group w-25">
-                                <input type="text" class="form-control form-control-sm" placeholder="Cari lahan...">
+                                <input type="search" class="form-control form-control-sm" placeholder="Cari lahan...">
                                 <button class="btn btn-sm btn-outline-secondary" type="button">
                                     <i class="fas fa-search"></i>
                                 </button>
@@ -505,9 +516,10 @@
                                 <table class="table table-hover" id="tabel-lahan">
                                     <thead>
                                         <tr>
-                                        <th>Nama Lahan</th><th>Lokasi</th><th>Luas</th>
+                                            <th>Nama Lahan</th><th>Lokasi</th><th>Luas</th>
                                         <th>Jenis Tanaman</th><th>Jenis Tanah</th><th>Status</th>
-                                        </tr>
+                                        <th>aksi</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
                                     </tbody>
@@ -517,20 +529,159 @@
                             
                             <nav aria-label="Page navigation">
                                 <ul class="pagination justify-content-center">
-                                    <li class="page-item disabled">
-                                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                    </li>
-                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">Next</a>
-                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(currentPage - 1)">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(1)">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(2)">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(3)">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(currentPage + 1)">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Tambahkan setelah card daftar lahan -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Manajemen Tanaman</h2>
+                        <button class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#addPlantInfoModal">
+                            <i class="fas fa-seedling me-2"></i>Input Informasi Tanaman
+                        </button>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-seedling me-2"></i> Informasi Tanaman</span>
+                            <div class="input-group w-25">
+                                <!-- <input type="search" class="form-control form-control-sm" placeholder="Cari tanaman..." id="searchPlant"> -->
+                                <input type="search" class="form-control form-control-sm" placeholder="Cari tanaman..." id="searchPlant">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="searchPlants()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tabel-tanaman">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Lahan</th>
+                                            <th>Nama Tanaman</th>
+                                            <th>Tanggal Tanam</th>
+                                            <th>Umur (hari)</th>
+                                            <th>Target Panen (kg)</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data akan diisi secara dinamis -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(currentPlantPage - 1)">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(1)">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(2)">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(3)">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(currentPlantPage + 1)">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
                     </div>
                 </div>
+
+
+                <!-- Modal tambah tanaman -->
+                <div class="modal fade" id="addPlantInfoModal" tabindex="-1" aria-labelledby="addPlantInfoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addPlantInfoModalLabel">Input Informasi Tanaman</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="./auth/plans.php" id="plantInfoForm" method="post" >
+                                    <div class="mb-3">
+                                        <label for="selectLand" class="form-label">Pilih Lahan</label>
+                                        <!-- <select class="form-select" id="selectLand" required>
+                                            <option value="" selected disabled>-- Pilih Lahan --</option> -->
+                                        <select class="form-select" id="selectLand" name="land_id" required>
+                                            <option value="" disabled selected>-- Pilih Lahan --</option>
+                                        </select>
+
+                                        <!-- </select> -->
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="plantName" class="form-label">Nama Tanaman</label>
+                                        <input type="text" class="form-control" id="plantName" name="nama_tanaman" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="plantingDate" class="form-label">Tanggal Mulai Tanam</label>
+                                        <input type="date" class="form-control" id="plantingDate" name="tanggal_tanam" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="harvestTarget" class="form-label">Target Panen (kg)</label>
+                                        <input type="number" class="form-control" id="harvestTarget" name="target_panen" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="additionalNotes" class="form-label">Catatan Tambahan</label>
+                                        <textarea class="form-control" id="additionalNotes" name="catatan" rows="3"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- edit plant modal -->
+                 <!-- Modal Edit Informasi Tanaman -->
+                 <div class="modal fade" id="editPlantModal" tabindex="-1" aria-labelledby="editPlantModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editPlantModalLabel">Edit Informasi Tanaman</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="./auth/plans_update.php" id="editPlantForm" method="post">
+                                        <!-- Hidden input untuk ID tanaman -->
+                                        <input type="hidden" id="editPlantId" name="id_tanaman">
+                                        
+                                        <div class="mb-3">
+                                            <label for="editSelectLand" class="form-label">Pilih Lahan</label>
+                                            <select class="form-select" id="editSelectLand" name="land_id" required>
+                                                <option value="" disabled selected>-- Pilih Lahan --</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editPlantName" class="form-label">Nama Tanaman</label>
+                                            <input type="text" class="form-control" id="editPlantName" name="nama_tanaman" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editPlantingDate" class="form-label">Tanggal Mulai Tanam</label>
+                                            <input type="date" class="form-control" id="editPlantingDate" name="tanggal_tanam" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editHarvestTarget" class="form-label">Target Panen (kg)</label>
+                                            <input type="number" class="form-control" id="editHarvestTarget" name="target_panen" min="1" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editAdditionalNotes" class="form-label">Catatan Tambahan</label>
+                                            <textarea class="form-control" id="editAdditionalNotes" name="catatan" rows="3"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 
                 <!-- Sensor Monitoring Tab -->
                 <div class="tab-pane fade" id="sensor-monitoring">
@@ -612,7 +763,7 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <span><i class="fas fa-history me-2"></i> Riwayat Data Sensor</span>
                             <div>
-                                <select class="form-select form-select-sm d-inline-block w-auto me-2">
+                                <!-- <select class="form-select form-select-sm d-inline-block w-auto me-2">
                                     <option>Suhu</option>
                                     <option>Kelembaban</option>
                                     <option>Cahaya</option>
@@ -622,7 +773,20 @@
                                     <option>24 Jam Terakhir</option>
                                     <option>7 Hari Terakhir</option>
                                     <option>30 Hari Terakhir</option>
+                                </select> -->
+                                <select id="sensorTypeSelect" class="form-select form-select-sm w-auto me-2">
+                                    <option value="temperature">Suhu</option>
+                                    <option value="humidity">Kelembaban</option>
+                                    <option value="light">Cahaya</option>
+                                    <option value="ph">pH Tanah</option>
                                 </select>
+
+                                <select id="timeRangeSelect" class="form-select form-select-sm w-auto">
+                                    <option value="1">24 Jam Terakhir</option>
+                                    <option value="7">7 Hari Terakhir</option>
+                                    <option value="30">30 Hari Terakhir</option>
+                                </select>
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -1993,6 +2157,158 @@
             </div>
         </div>
     </div>
+    <!-- Profile modal -->
+     <!-- Modal Profile -->
+        <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="profileModalLabel"><i class="fas fa-user-circle me-2"></i>Profile Pengguna</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                <!-- Kolom Foto Profil -->
+                <div class="col-md-4 text-center">
+                    <div class="profile-img-container mb-3">
+                    <img src="https://via.placeholder.com/150" alt="Foto Profil" class="img-thumbnail rounded-circle mb-2" id="profileImage">
+                    <button class="btn btn-sm btn-outline-success btn-block mt-2" id="changePhotoBtn">
+                        <i class="fas fa-camera me-1"></i> Ganti Foto
+                    </button>
+                    <input type="file" id="profilePhotoUpload" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <h5 id="userName">Nama Pengguna</h5>
+                        <p class="text-muted mb-1" id="userRole">Petani</p>
+                        <p class="text-muted" id="userSince">Bergabung sejak Jan 2023</p>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Kolom Informasi Profil -->
+                <div class="col-md-8">
+                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Informasi</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Aktivitas</button>
+                    </li>
+                    </ul>
+                    
+                    <div class="tab-content p-3 border border-top-0 rounded-bottom" id="profileTabsContent">
+                    <!-- Tab Informasi -->
+                    <div class="tab-pane fade show active" id="info" role="tabpanel">
+                        <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            <label for="firstName" class="form-label">Nama Depan</label>
+                            <input type="text" class="form-control" id="firstName" value="John">
+                            </div>
+                            <div class="col-md-6">
+                            <label for="lastName" class="form-label">Nama Belakang</label>
+                            <input type="text" class="form-control" id="lastName" value="Doe">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="john.doe@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Telepon</label>
+                            <input type="tel" class="form-control" id="phone" value="+628123456789">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="address" rows="2">Jl. Pertanian No. 123, Desa Sukamaju</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="farmSize" class="form-label">Luas Lahan (ha)</label>
+                            <input type="number" class="form-control" id="farmSize" value="2.5">
+                        </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Tab Pengaturan -->
+                    <div class="tab-pane fade" id="settings" role="tabpanel">
+                        <div class="mb-3">
+                        <label class="form-label">Notifikasi</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notifEmail" checked>
+                            <label class="form-check-label" for="notifEmail">Email Notifikasi</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notifSMS" checked>
+                            <label class="form-check-label" for="notifSMS">SMS Notifikasi</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="notifApp">
+                            <label class="form-check-label" for="notifApp">Notifikasi Aplikasi</label>
+                        </div>
+                        </div>
+                        <div class="mb-3">
+                        <label class="form-label">Bahasa</label>
+                        <select class="form-select">
+                            <option selected>Bahasa Indonesia</option>
+                            <option>English</option>
+                        </select>
+                        </div>
+                        <div class="mb-3">
+                        <label class="form-label">Tema</label>
+                        <select class="form-select">
+                            <option selected>Terang</option>
+                            <option>Gelap</option>
+                        </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab Aktivitas -->
+                    <div class="tab-pane fade" id="activity" role="tabpanel">
+                        <div class="activity-list">
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 text-success me-3">
+                            <i class="fas fa-seedling fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Menanam Padi</h6>
+                            <p class="mb-0 text-muted">Varietas: Ciherang | Luas: 0.5 ha</p>
+                            <small class="text-muted">2 hari yang lalu</small>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 text-primary me-3">
+                            <i class="fas fa-tint fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Penyiraman</h6>
+                            <p class="mb-0 text-muted">Lahan Utara | Durasi: 30 menit</p>
+                            <small class="text-muted">5 hari yang lalu</small>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 text-warning me-3">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Analisis Hasil Panen</h6>
+                            <p class="mb-0 text-muted">Hasil: 3.2 ton/ha | Peningkatan 15%</p>
+                            <small class="text-muted">2 minggu yang lalu</small>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-success" id="saveProfileBtn"><i class="fas fa-save me-1"></i> Simpan Perubahan</button>
+            </div>
+            </div>
+        </div>
+        </div>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -2005,10 +2321,10 @@
         document.getElementById('addLandModal').addEventListener('shown.bs.modal', function() {
         this.removeAttribute('aria-hidden');
         });
-
+        
         // When hiding modal
         document.getElementById('addLandModal').addEventListener('hide.bs.modal', function() {
-        this.setAttribute('aria-hidden', 'true');
+            this.setAttribute('aria-hidden', 'true');
         });
         // Sidebar Toggle
         document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
@@ -2027,114 +2343,114 @@
         
         // Charts
         // Growth Chart
-        const growthCtx = document.getElementById('growthChart').getContext('2d');
-        const growthChart = new Chart(growthCtx, {
-            type: 'line',
-            data: {
-                labels: ['1 Minggu', '2 Minggu', '3 Minggu', '4 Minggu', '5 Minggu', '6 Minggu', '7 Minggu'],
-                datasets: [
-                    {
-                        label: 'Tinggi Tanaman (cm)',
-                        data: [15, 25, 35, 50, 65, 80, 95],
-                        borderColor: '#4CAF50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    },
-                    {
-                        label: 'Jumlah Daun',
-                        data: [4, 6, 8, 10, 12, 14, 16],
-                        borderColor: '#2196F3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                        tension: 0.3,
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        // const growthCtx = document.getElementById('growthChart').getContext('2d');
+        // const growthChart = new Chart(growthCtx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: ['1 Minggu', '2 Minggu', '3 Minggu', '4 Minggu', '5 Minggu', '6 Minggu', '7 Minggu'],
+        //         datasets: [
+        //             {
+        //                 label: 'Tinggi Tanaman (cm)',
+        //                 data: [15, 25, 35, 50, 65, 80, 95],
+        //                 borderColor: '#4CAF50',
+        //                 backgroundColor: 'rgba(76, 175, 80, 0.1)',
+        //                 tension: 0.3,
+        //                 fill: true
+        //             },
+        //             {
+        //                 label: 'Jumlah Daun',
+        //                 data: [4, 6, 8, 10, 12, 14, 16],
+        //                 borderColor: '#2196F3',
+        //                 backgroundColor: 'rgba(33, 150, 243, 0.1)',
+        //                 tension: 0.3,
+        //                 fill: true
+        //             }
+        //         ]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             },
+        //             tooltip: {
+        //                 mode: 'index',
+        //                 intersect: false,
+        //             }
+        //         },
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: true
+        //             }
+        //         }
+        //     }
+        // });
         
         // Realtime Chart
-        const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
-        const realtimeChart = new Chart(realtimeCtx, {
-            type: 'line',
-            data: {
-                labels: Array.from({length: 20}, (_, i) => i + 1),
-                datasets: [{
-                    label: 'Suhu (°C)',
-                    data: Array.from({length: 20}, () => Math.floor(Math.random() * 10) + 25),
-                    borderColor: '#FF5722',
-                    backgroundColor: 'rgba(255, 87, 34, 0.1)',
-                    tension: 0.1,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 20,
-                        max: 35
-                    }
-                }
-            }
-        });
-        
-        // History Chart
-        const historyCtx = document.getElementById('historyChart').getContext('2d');
-        const historyChart = new Chart(historyCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-                datasets: [{
-                    label: 'Suhu Rata-rata (°C)',
-                    data: [28, 29, 30, 31, 29, 27, 26],
-                    backgroundColor: 'rgba(255, 152, 0, 0.7)',
-                    borderColor: 'rgba(255, 152, 0, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 20,
-                        max: 35
-                    }
-                }
-            }
-        });
+        // const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
+        // const realtimeChart = new Chart(realtimeCtx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: Array.from({length: 20}, (_, i) => i + 1),
+        //         datasets: [{
+        //             label: 'Suhu (°C)',
+        //             data: Array.from({length: 20}, () => Math.floor(Math.random() * 10) + 25),
+        //             borderColor: '#FF5722',
+        //             backgroundColor: 'rgba(255, 87, 34, 0.1)',
+        //             tension: 0.1,
+        //             fill: true
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             }
+        //         },
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: false,
+        //                 min: 20,
+        //                 max: 35
+        //             }
+        //         }
+        //     }
+        // });
+
+        // // History Chart
+        // const historyCtx = document.getElementById('historyChart').getContext('2d');
+        // const historyChart = new Chart(historyCtx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+        //         datasets: [{
+        //             label: 'Suhu Rata-rata (°C)',
+        //             data: [28, 29, 30, 31, 29, 27, 26],
+        //             backgroundColor: 'rgba(255, 152, 0, 0.7)',
+        //             borderColor: 'rgba(255, 152, 0, 1)',
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             }
+        //         },
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: false,
+        //                 min: 20,
+        //                 max: 35
+        //             }
+        //         }
+        //     }
+        // });
         
         // Productivity Chart
         const productivityCtx = document.getElementById('productivityChart').getContext('2d');
@@ -2186,6 +2502,183 @@
     </script>
 
     <script>
+        // async function updateHistoryChart(type = 'temperature', range = 7) {
+        //     const res = await fetch(`./auth/get_history_data.php?type=${type}&range=${range}`);
+        //     const historyData = await res.json();
+
+        //     historyChart.data.labels = historyData.labels;
+        //     historyChart.data.datasets[0].data = historyData.data;
+        //     historyChart.data.datasets[0].label = `Rata-rata ${type}`;
+
+        //     historyChart.update();
+        // }
+
+            const historyCtx = document.getElementById('historyChart').getContext('2d');
+            const historyChart = new Chart(historyCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                label: 'Data Sensor',
+                data: [],
+                backgroundColor: 'rgba(33, 150, 243, 0.6)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                }
+            }
+            });
+
+            function updateChart() {
+            const type = document.getElementById('sensorTypeSelect').value;
+            const range = document.getElementById('timeRangeSelect').value;
+
+            fetch(`./auth/get_sensor_data.php?type=${type}&range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                historyChart.data.labels = data.labels;
+                historyChart.data.datasets[0].data = data.data;
+                historyChart.data.datasets[0].label = `${type.charAt(0).toUpperCase() + type.slice(1)} Rata-rata`;
+                historyChart.update();
+                });
+            }
+
+            document.getElementById('sensorTypeSelect').addEventListener('change', updateChart);
+            document.getElementById('timeRangeSelect').addEventListener('change', updateChart);
+
+            updateChart();
+
+     </script>
+
+     <!-- dropdown pilih land form plans -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const select = document.getElementById('selectLand');
+
+    // Fetch dan isi dropdown
+    fetch('./auth/dropdown_lahan.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                const option = document.createElement('option');
+                option.text = 'Gagal mengambil data';
+                option.disabled = true;
+                select.add(option);
+                return;
+            }
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.text = item.nama_lahan;
+                select.add(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // Saat user memilih lahan, kirim ke PHP
+    select.addEventListener("change", function () {
+    const selectedLandId = select.value;
+    console.log("Selected Land ID:", selectedLandId); // Debug
+
+    if (!selectedLandId) {
+        console.error("Lahan belum dipilih!");
+        return;
+    }
+
+    fetch('./auth/set_selected_land.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ land_id: selectedLandId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error('Gagal menyimpan session lahan:', data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+});
+</script>
+
+
+
+
+
+
+    <script>
+        async function updateRealtimeChart(type = 'temperature') {
+            const res = await fetch(`./auth/get_sensor_data.php?type=${type}`);
+            const sensorData = await res.json();
+
+            realtimeChart.data.labels = sensorData.labels;
+            realtimeChart.data.datasets[0].data = sensorData.data;
+            realtimeChart.data.datasets[0].label = type.charAt(0).toUpperCase() + type.slice(1);
+            realtimeChart.update();
+        }
+
+        const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
+        const realtimeChart = new Chart(realtimeCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Loading...',
+                    data: [],
+                    borderColor: '#FF5722',
+                    backgroundColor: 'rgba(255, 87, 34, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 20,
+                        max: 40
+                    }
+                }
+            }
+        });
+
+        updateRealtimeChart();
+
+        // Jika dropdown berubah
+        document.querySelectorAll('select.form-select')[0].addEventListener('change', function() {
+            let value = this.value.toLowerCase();
+            if (value === 'kelembaban') value = 'humidity';
+            else if (value === 'cahaya') value = 'light';
+            else if (value === 'ph tanah') value = 'ph';
+            else if (value === 'suhu') value = 'temperature';
+
+            updateRealtimeChart(value);
+        });
+    </script>
+
+
+    <!-- <script>
         window.addEventListener("DOMContentLoaded", () => {
             fetch('./auth/get_land.php') // sesuaikan path-nya dengan posisi file ini
                 .then(response => response.text())
@@ -2193,8 +2686,190 @@
                     document.querySelector('#tabel-lahan tbody').innerHTML = data;
                 })
                 .catch(error => console.error('Gagal memuat data lahan:', error));
-        });
+        }); -->
     </script>
+
+    <script>
+        let currentPage = 1;
+
+        function loadPage(page) {
+            if (page < 1) return;
+            fetch(`/Project-rpl/public/auth/get_land.php?page=${page}`)
+                .then(res => res.text())
+                .then(data => {
+                    document.querySelector('#tabel-lahan tbody').innerHTML = data;
+                    currentPage = page;
+                })
+                .catch(err => console.error("Gagal muat data:", err));
+        }
+
+        // Panggil halaman pertama saat halaman dimuat
+        window.addEventListener("DOMContentLoaded", () => {
+            loadPage(1);
+        });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.querySelector("input[placeholder='Cari lahan...']");
+                const searchButton = document.querySelector(".input-group button");
+
+                function loadLahan(page = 1, search = '') {
+                    fetch(`auth/get_land.php?page=${page}&search=${encodeURIComponent(search)}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.querySelector("#tabel-lahan tbody").innerHTML = html;
+                        })
+                        .catch(error => {
+                            console.error("Gagal mengambil data:", error);
+                            document.querySelector("#tabel-lahan tbody").innerHTML =
+                                "<tr><td colspan='6'>Gagal mengambil data lahan.</td></tr>";
+                        });
+                }
+
+                searchButton.addEventListener("click", function () {
+                    const keyword = searchInput.value.trim();
+                    loadLahan(1, keyword); // Cari mulai dari halaman 1
+                });
+
+                // OPTIONAL: pencarian saat tekan Enter
+                searchInput.addEventListener("keyup", function (e) {
+                    if (e.key === "Enter") {
+                        searchButton.click();
+                    }
+                });
+
+                // Load data pertama kali
+                loadLahan();
+            });
+        </script>
+
+        <script>
+            function deleteLand(id) {
+    if (confirm("Yakin ingin menghapus lahan ini?")) {
+        fetch(`auth/delete_land.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_lahan: id })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Lahan berhasil dihapus");
+                location.reload(); // atau panggil fungsi loadLahan()
+            } else {
+                alert("Gagal menghapus lahan: " + data.message);
+            }
+        })
+        .catch(err => {
+            alert("Terjadi kesalahan: " + err);
+        });
+    }
+}
+
+        </script>
+
+    <script>
+    let currentPlantPage = 1;
+
+    function loadPlantPage(page = 1, search = '') {
+        if (page < 1) return;
+
+        fetch(`auth/get_plant_data.php?page=${page}&search=${encodeURIComponent(search)}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#tabel-tanaman tbody');
+                tbody.innerHTML = '';
+
+                if (data.plants.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">Tidak ada data ditemukan.</td></tr>';
+                    return;
+                }
+
+                data.plants.forEach(plant => {
+                    const today = new Date();
+                    const plantingDate = new Date(plant.tanggal_tanam);
+                    const age = Math.floor((today - plantingDate) / (1000 * 60 * 60 * 24));
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${plant.nama_lahan}</td>
+                        <td>${plant.nama_tanaman}</td>
+                        <td>${plant.tanggal_tanam}</td>
+                        <td>${age}</td>
+                        <td>${plant.target_panen}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deletePlant(${plant.id_tanaman})">Hapus</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                currentPlantPage = page;
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data tanaman:', error);
+                document.querySelector('#tabel-tanaman tbody').innerHTML = '<tr><td colspan="6">Gagal mengambil data tanaman.</td></tr>';
+            });
+    }
+
+    function searchPlants() {
+        const keyword = document.querySelector('#searchPlant').value.trim();
+        loadPlantPage(1, keyword);
+    }
+
+    // function editPlant(id) {
+    //     fetch(`auth/get_plant_detail.php?id=${id}`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             document.getElementById("editPlantId").value = data.id_tanaman;
+    //             document.getElementById("editSelectLand").value = data.land_id;
+    //             document.getElementById("editPlantName").value = data.nama_tanaman;
+    //             document.getElementById("editPlantingDate").value = data.tanggal_tanam;
+    //             document.getElementById("editHarvestTarget").value = data.target_panen;
+    //             document.getElementById("editAdditionalNotes").value = data.catatan || "";
+
+    //             const modal = new bootstrap.Modal(document.getElementById('editPlantModal'));
+    //             modal.show();
+    //         })
+    //         .catch(error => {
+    //             console.error("Gagal mengambil data tanaman:", error);
+    //             alert("Terjadi kesalahan saat mengambil data tanaman.");
+    //         });
+    // }
+
+    function deletePlant(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus data tanaman ini?")) {
+            fetch(`auth/delete_plant.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_tanaman: id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Data berhasil dihapus");
+                    loadPlantPage(currentPlantPage);
+                } else {
+                    alert("Gagal menghapus data: " + data.message);
+                }
+            })
+            .catch(err => alert("Terjadi kesalahan: " + err));
+        }
+    }
+
+    // Initial setup
+    window.addEventListener("DOMContentLoaded", () => {
+        loadPlantPage(1);
+        document.querySelector("#searchPlant").addEventListener("keyup", function(e) {
+            if (e.key === "Enter") searchPlants();
+        });
+    });
+</script>
+
+        
 
 
     <!-- <script>
@@ -2224,8 +2899,570 @@
         status: "Aktif"
     });
     </script> -->
+<!-- 
+<script>
+
+function editPlant(id) {
+    fetch(`./auth/get_plant_detail.php?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Isi nilai input di dalam modal
+                document.getElementById('editIdTanaman').value = data.plant.id_tanaman;
+                document.getElementById('selectLand').value = data.plant.land_id;
+                document.getElementById('plantName').value = data.plant.nama_tanaman;
+                document.getElementById('plantingDate').value = data.plant.tanggal_tanam;
+                document.getElementById('harvestTarget').value = data.plant.target_panen;
+                document.getElementById('additionalNotes').value = data.plant.catatan;
+
+                // Tampilkan modal
+                const editModal = new bootstrap.Modal(document.getElementById('editModalPlant'));
+                editModal.show();
+            } else {
+                alert('Gagal mengambil data tanaman.');
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            alert('Terjadi kesalahan saat mengambil data.');
+        });
+}
+
+</script> -->
 
 
+
+
+    <script>
+//         // Fungsi untuk fetch data dari dashboard_data_handler.php
+// async function loadDashboardData() {
+//   try {
+//     const response = await fetch('dashboard_data_handler.php');
+//     const data = await response.json();
+
+//     // Summary Cards
+//     document.querySelector('.sensor-value:nth-child(1)').textContent = `${data.summary.suhu}°C`;
+//     document.querySelector('.sensor-value:nth-child(2)').textContent = `${data.summary.kelembaban}%`;
+//     document.querySelector('.sensor-value:nth-child(3)').textContent = `${data.summary.lux}`;
+//     document.querySelector('.sensor-value:nth-child(4)').textContent = `${data.summary.ph}`;
+
+//     // Prakiraan Cuaca
+//     const cuacaLabels = ["Hari Ini", "Besok", "Lusa"];
+//     const cuacaIcons = {
+//       Cerah: 'fas fa-sun text-warning',
+//       Berawan: 'fas fa-cloud-sun text-secondary',
+//       'Hujan Ringan': 'fas fa-cloud-rain text-primary',
+//       Panas: 'fas fa-temperature-high text-danger'
+//     };
+
+//     document.querySelectorAll('#dashboard .card-body .row.text-center .col').forEach((col, i) => {
+//       col.querySelector('h6').textContent = cuacaLabels[i];
+//       col.querySelector('i').className = cuacaIcons[data.cuaca.prediksi];
+//       col.querySelector('div').textContent = `${data.summary.suhu + 2 - i}°C / ${data.summary.suhu - 4 - i}°C`;
+//       col.querySelector('small').textContent = data.cuaca.prediksi;
+//     });
+
+//     // Aktivitas Terkini
+//     const activityContainer = document.querySelector('#dashboard .card-body[style*="overflow-y"]');
+//     activityContainer.innerHTML = '';
+//     data.aktivitas.forEach(act => {
+//       const iconMap = {
+//         irigasi: 'fa-tint bg-primary',
+//         hama: 'fa-bug bg-danger',
+//         login: 'fa-user bg-info',
+//         suhu: 'fa-temperature-high bg-warning'
+//       };
+//       activityContainer.innerHTML += `
+//         <div class="d-flex mb-3">
+//           <div class="flex-shrink-0">
+//             <i class="fas ${iconMap[act.jenis] || 'fa-info'} text-white rounded-circle p-2"></i>
+//           </div>
+//           <div class="flex-grow-1 ms-3">
+//             <h6 class="mb-0">${act.deskripsi}</h6>
+//             <small class="text-muted">${act.waktu}</small>
+//           </div>
+//         </div>`;
+//     });
+
+//     // Status Lahan
+//     const lahanStatusContainer = document.querySelector('#dashboard .card .card-body .list-group');
+//     lahanStatusContainer.innerHTML = '';
+//     data.status_lahan.forEach(item => {
+//       const badgeClass = {
+//         Normal: 'bg-success',
+//         "Perlu Irigasi": 'bg-warning',
+//         Hama: 'bg-danger'
+//       }[item.status];
+
+//       lahanStatusContainer.innerHTML += `
+//         <div class="list-group-item d-flex justify-content-between align-items-center">
+//           <div>
+//             <h6 class="mb-1">${item.nama_lahan}</h6>
+//             <small class="text-muted">${item.jenis_tanaman} - ${item.luas} Ha</small>
+//           </div>
+//           <span class="status-badge ${badgeClass}">${item.status}</span>
+//         </div>`;
+//     });
+
+//   } catch (error) {
+//     console.error('Gagal memuat data dashboard:', error);
+//   }
+// }
+
+// // Jalankan saat halaman dimuat
+// document.addEventListener('DOMContentLoaded', loadDashboardData);
+//     </script>
+<!-- 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Load all dashboard data
+    fetchDashboardData();
+    
+    // Initialize growth chart with two datasets
+    const growthCtx = document.getElementById('growthChart').getContext('2d');
+    const growthChart = new Chart(growthCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Usia Tanaman (hari)',
+                    data: [],
+                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                    borderColor: 'rgba(76, 175, 80, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Hari Menuju Panen',
+                    data: [],
+                    backgroundColor: 'rgba(255, 152, 0, 0.2)',
+                    borderColor: 'rgba(255, 152, 0, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Usia (hari)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Hari Menuju Panen'
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tanggal'
+                    }
+                }
+            }
+        }
+    });
+
+    // Update growth chart when range changes
+    document.querySelector('#growthChart').closest('.card').querySelector('select').addEventListener('change', function() {
+        const range = this.value;
+        let param;
+        if (range === '7 Hari Terakhir') param = '7days';
+        else if (range === '30 Hari Terakhir') param = '30days';
+        else param = '3months';
+
+        fetch(`auth/growth_chart.php?range=${param}`)
+            .then(response => response.json())
+            .then(data => {
+                growthChart.data.labels = data.labels;
+                growthChart.data.datasets[0].data = data.ageData;
+                growthChart.data.datasets[1].data = data.harvestData;
+                growthChart.update();
+            });
+    });
+
+    // Initialize with 7 days data
+    fetch('auth/growth_chart.php?range=7days')
+        .then(response => response.json())
+        .then(data => {
+            growthChart.data.labels = data.labels;
+            growthChart.data.datasets[0].data = data.ageData;
+            growthChart.data.datasets[1].data = data.harvestData;
+            growthChart.update();
+        });
+
+    // Field selector functionality
+    document.querySelector('#fieldSelect').addEventListener('change', function() {
+        const fieldId = this.value;
+        fetchDashboardData(fieldId);
+        
+        // Update charts with field filter
+        const rangeSelect = document.querySelector('#growthChart').closest('.card').querySelector('select');
+        const range = rangeSelect.value;
+        let param;
+        if (range === '7 Hari Terakhir') param = '7days';
+        else if (range === '30 Hari Terakhir') param = '30days';
+        else param = '3months';
+
+        const url = `auth/growth_chart.php?range=${param}` + (fieldId !== 'all' ? `&lahan_id=${fieldId}` : '');
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                growthChart.data.labels = data.labels;
+                growthChart.data.datasets[0].data = data.ageData;
+                growthChart.data.datasets[1].data = data.harvestData;
+                growthChart.update();
+            });
+    });
+});
+
+function fetchDashboardData(fieldId = 'all') {
+    const url = 'auth/dashboard_data.php' + (fieldId !== 'all' ? `?lahan_id=${fieldId}` : '');
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            updateSummaryCards(data.summary);
+            updateFieldStatus(data.fields);
+            updateActivities(data.activities);
+            updateWeatherForecast(data.forecast);
+            
+            // Update field selector options
+            updateFieldSelector(data.fields);
+        });
+}
+
+function updateFieldSelector(fields) {
+    const selector = document.querySelector('#fieldSelect');
+    selector.innerHTML = '<option value="all">Semua Lahan</option>';
+    
+    fields.forEach(field => {
+        const option = document.createElement('option');
+        option.value = field.id_lahan;
+        option.textContent = field.nama_lahan;
+        selector.appendChild(option);
+    });
+}
+
+function updateSummaryCards(data) {
+    document.querySelector('.sensor-value:nth-of-type(1)').textContent = `${data.temperature}°C`;
+    document.querySelector('.sensor-value:nth-of-type(2)').textContent = `${data.humidity}%`;
+    document.querySelector('.sensor-value:nth-of-type(3)').textContent = data.light;
+    document.querySelector('.sensor-value:nth-of-type(4)').textContent = data.ph;
+    
+    // Update moisture card if exists
+    const moistureCard = document.querySelector('.sensor-value:nth-of-type(5)');
+    if (moistureCard) {
+        moistureCard.textContent = `${data.moisture}%`;
+    }
+}
+
+function updateFieldStatus(fields) {
+    const container = document.querySelector('.list-group');
+    container.innerHTML = '';
+
+    fields.forEach(field => {
+        const statusClass = getStatusClass(field.status);
+        const item = document.createElement('div');
+        item.className = 'list-group-item d-flex justify-content-between align-items-center';
+        item.innerHTML = `
+            <div>
+                <h6 class="mb-1">${field.nama_lahan}</h6>
+                <small class="text-muted">${field.jenis_tanaman} - ${field.luas} Ha (${field.plant_count || 0} tanaman)</small>
+            </div>
+            <span class="badge ${statusClass}">${field.status}</span>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function getStatusClass(status) {
+    switch(status) {
+        case 'Aktif': return 'bg-success';
+        case 'Maintenance': return 'bg-warning';
+        case 'Nonaktif': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+function updateActivities(activities) {
+    const container = document.querySelector('.card-body[style*="max-height"]');
+    container.innerHTML = '';
+
+    activities.forEach(activity => {
+        const iconClass = getActivityIcon(activity.type);
+        const iconColor = getActivityColor(activity.type);
+        const item = document.createElement('div');
+        item.className = 'd-flex mb-3';
+        item.innerHTML = `
+            <div class="flex-shrink-0">
+                <i class="${iconClass} ${iconColor} rounded-circle p-2"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+                <h6 class="mb-0">${activity.description}</h6>
+                <small class="text-muted">${formatTime(activity.timestamp)}</small>
+            </div>
+        `;
+        container.appendChild(item);
+    });
+}
+
+function getActivityIcon(type) {
+    switch(type) {
+        case 'sensor': return 'fas fa-temperature-high';
+        case 'planting': return 'fas fa-seedling';
+        default: return 'fas fa-info-circle';
+    }
+}
+
+function getActivityColor(type) {
+    switch(type) {
+        case 'sensor': return 'bg-primary text-white';
+        case 'planting': return 'bg-success text-white';
+        default: return 'bg-info text-white';
+    }
+}
+
+function formatTime(timestamp) {
+    const now = new Date();
+    const activityTime = new Date(timestamp);
+    const diff = Math.floor((now - activityTime) / 1000); // difference in seconds
+    
+    if (diff < 60) return 'Baru saja';
+    if (diff < 3600) return `${Math.floor(diff/60)} menit yang lalu`;
+    if (diff < 86400) return `${Math.floor(diff/3600)} jam yang lalu`;
+    return `${Math.floor(diff/86400)} hari yang lalu`;
+}
+
+function updateWeatherForecast(forecast) {
+    const container = document.querySelector('.card-body .row.text-center');
+    container.innerHTML = '';
+
+    forecast.forEach((day, index) => {
+        const dayNames = ['Hari Ini', 'Besok', 'Lusa'];
+        const iconClass = getWeatherIcon(day.condition);
+        const col = document.createElement('div');
+        col.className = 'col';
+        col.innerHTML = `
+            <h6>${dayNames[index] || formatDate(day.date)}</h6>
+            <i class="${iconClass} fa-2x"></i>
+            <div>${day.temp}°C / ${Math.round(day.temp - 5)}°C</div>
+            <small class="text-muted">${day.condition}</small>
+        `;
+        container.appendChild(col);
+    });
+}
+
+function getWeatherIcon(condition) {
+    if (condition.includes('Hujan')) return 'fas fa-cloud-rain text-primary';
+    if (condition.includes('Berawan')) return 'fas fa-cloud-sun text-secondary';
+    return 'fas fa-sun text-warning';
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', { weekday: 'long' });
+}
+    </script> -->
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fieldSelect = document.getElementById("fieldSelect-dashboard");
+
+    // Ambil dropdown lahan
+    fetch("auth/dropdown_lahan.php")
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(field => {
+                const option = document.createElement("option");
+                option.value = field.id;
+                option.textContent = field.nama_lahan;
+                fieldSelect.appendChild(option);
+            });
+        });
+
+    // Fungsi untuk update ringkasan
+    function updateSummary(idLahan = 'all') {
+        fetch(`auth/dashboard_sensor.php?id_lahan=${idLahan}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log("Selected Lahan ID:", idLahan);
+
+                console.log(data); 
+                document.querySelector(".sensor-value-suhu").textContent = `${parseFloat(data.suhu).toFixed(1)}°C`;
+                document.querySelector(".sensor-value-lembab").textContent = `${parseFloat(data.kelembaban).toFixed(1)}%`;
+                document.querySelector(".sensor-value-cahaya").textContent = `${parseFloat(data.lux).toFixed(0)}`;
+                document.querySelector(".sensor-value-tanah").textContent = `${parseFloat(data.ph).toFixed(1)}`;
+            });
+    }
+
+    // Saat dropdown berubah
+    fieldSelect.addEventListener("change", function () {
+        const selectedId = this.value;
+        updateSummary(selectedId);
+    });
+
+    // Load awal
+    updateSummary(); // 'all'
+});
+</script>
+
+<script>
+function updateCuaca() {
+    fetch('auth/predict_weater.php')
+        .then(res => res.json())
+        .then(data => {
+            const cuaca = [data.today, data.tomorrow, data.day_after];
+            const elements = document.querySelectorAll('.weatering');
+
+            elements.forEach((el, index) => {
+                const info = cuaca[index];
+                const icon = el.querySelector('i');
+                const temp = el.querySelector('div');
+                const status = el.querySelector('small');
+
+                // Update suhu max/min
+                temp.innerText = `${info.max}°C / ${info.min}°C`;
+
+                // Update status
+                status.innerText = info.status;
+
+                // Ganti icon
+                icon.className = `fas ${info.icon} fa-2x ${info.color}`;
+            });
+        });
+}
+
+updateCuaca();
+</script>
+
+
+<script>
+function getBadgeClass(status) {
+    switch (status) {
+        case 'Aktif': return 'bg-success';
+        case 'Maintenance': return 'bg-warning';
+        case 'Nonaktif': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+async function loadLandStatus() {
+    try {
+        const response = await fetch('auth/get_land_status.php');
+        const data = await response.json();
+        const container = document.getElementById('landStatusList');
+        container.innerHTML = '';
+
+        data.forEach(land => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center';
+            item.innerHTML = `
+                <div>
+                    <h6 class="mb-1">${land.nama_lahan}</h6>
+                    <small class="text-muted">${land.jenis_tanaman} - ${parseFloat(land.luas)} Ha</small>
+                </div>
+                <span class="status-badge ${getBadgeClass(land.status)}">${land.status}</span>
+            `;
+            container.appendChild(item);
+        });
+    } catch (error) {
+        console.error('Gagal memuat status lahan:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadLandStatus);
+</script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Buka modal ketika menu profil diklik
+    const openModalBtn = document.querySelector('.dropdown-item[href="#"]');
+    if (openModalBtn) {
+      openModalBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+        profileModal.show();
+      });
+    }
+
+    // Ganti foto profil
+    const changePhotoBtn = document.getElementById('changePhotoBtn');
+    const photoInput = document.getElementById('profilePhotoUpload');
+    const profileImage = document.getElementById('profileImage');
+
+    if (changePhotoBtn && photoInput && profileImage) {
+      changePhotoBtn.addEventListener('click', function () {
+        photoInput.click();
+      });
+
+      photoInput.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            profileImage.src = event.target.result;
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+
+    // Simpan profil (submit form)
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+      profileForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(profileForm);
+
+        fetch('auth/save_profile.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Profil berhasil diperbarui!');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+            modal.hide();
+          } else {
+            alert('Gagal menyimpan: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menyimpan profil.');
+        });
+      });
+    }
+  });
+</script>
+
+
+
+
+ <!-- <script src="dashboard.js"></script> -->
 
 </body>
 </html>
