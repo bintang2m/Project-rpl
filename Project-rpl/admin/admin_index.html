@@ -1,0 +1,3111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriMonitor - Agricultural Monitoring System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <!-- <link rel="stylesheet" href="/src/style/main.css"> -->
+    <style>
+
+            :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #8BC34A;
+            --dark-color: #2E7D32;
+            --light-color: #C8E6C9;
+            --danger-color: #F44336;
+            --warning-color: #FFC107;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            width: 100%;
+        }
+        
+        .sidebar {
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+        }
+
+
+         .sidebar img {
+            /* position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            top: 0;
+            left: 0; */
+            width: 60px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .alert-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+        
+        .alert-danger {
+            background-color: var(--danger-color);
+            border-color: var(--danger-color);
+            color: white;
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .img-profile{
+            width: 30px;
+            height: 30px;
+            background: red;
+            overflow: hidden;
+            display: relative;
+            z-index: -100;
+        }
+
+        .img-profile img{
+            background-color: blue;
+            width: 30px;
+            height: 30px;
+        }
+        
+        .bg-success-light {
+            background-color: var(--light-color);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .sensor-value {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .sensor-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar p-3" id="sidebar">
+            <div class="d-flex align-items-center mb-4">
+                <img src="./src/images/logo-4x4.png" alt="">
+
+                <h4 class="m-0">AgriMonitor</h4>
+                <button class="btn btn-sm btn-outline-light ms-auto d-md-none" id="sidebarToggle">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <hr class="my-2 bg-light">
+            
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active" data-bs-toggle="pill">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#land-management" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-tractor"></i> Manajemen Lahan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#sensor-monitoring" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-microchip"></i> Monitoring Sensor
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#ai-recommendation" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-robot"></i> Rekomendasi & AI
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-file-alt"></i> Laporan & Evaluasi
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#hr-payroll" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-users-cog"></i> SDM & Penggajian
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link" data-bs-toggle="pill">
+                        <i class="fas fa-cog"></i> Pengaturan Sistem
+                    </a>
+                </li>
+            </ul>
+            
+            <hr class="my-2 bg-light">
+            
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle gap-2" id="dropdownUser" data-bs-toggle="dropdown">
+                    <div class="img-profile rounded-circle">
+                        <img src="./src/images/logo.png" alt="Profile" class="rounded-circle me-2 profile-img ">
+                    </div>
+                    <strong>Admin User</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        
+        
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4 navbar-top">
+                <div class="container-fluid">
+                    <button class="btn btn-sm btn-outline-secondary d-md-none" id="mobileSidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    
+                    <div class="d-flex align-items-center ms-auto">
+                        <div class="dropdown me-3">
+                            <button class="btn btn-light dropdown-toggle" type="button" id="notificationsDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge bg-danger rounded-pill">3</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                                <li><h6 class="dropdown-header">Notifikasi</h6></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-bug text-danger me-2"></i> Hama terdeteksi di Lahan A</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-tint text-primary me-2"></i> Irigasi diperlukan di Lahan B</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-exclamation-triangle text-warning me-2"></i> Sensor kelembaban tidak aktif</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-center" href="#">Lihat semua</a></li>
+                            </ul>
+                        </div>
+                        <span class="navbar-text">
+                            <i class="fas fa-calendar-alt me-2"></i> <span id="currentDate">24 Mei 2025</span>
+                        </span>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Page Content -->
+            <div class="tab-content">
+                <!-- Dashboard Tab -->
+                <div class="tab-pane fade show active" id="dashboard">
+                    <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Dashboard</h2>
+                        <div>
+                            <select class="form-select form-select-sm w-auto d-inline-block">
+                                <option>Semua Lahan</option>
+                                <option>Lahan A</option>
+                                <option>Lahan B</option>
+                                <option>Lahan C</option>
+                            </select>
+                        </div>
+                    </div>
+                     -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Dashboard</h2>
+                        <div>
+                            <select id="fieldSelect-dashboard" class="form-select form-select-sm w-auto d-inline-block">
+                                <option value="all">Semua Lahan</option>
+                                <!-- Options will be populated by JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Alerts Section -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <i class="fas fa-bug me-2"></i> <strong>Hama terdeteksi!</strong> di Lahan A
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                <i class="fas fa-tint me-2"></i> <strong>Irigasi diperlukan</strong> di Lahan B
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i> <strong>Sensor rusak</strong> di Lahan C
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Summary Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card bg-success-light">
+                                <div class="card-body text-center">
+                                    <div class="sensor-value sensor-value-suhu">28°C</div>
+                                    <div class="sensor-label">Suhu Rata-rata</div>
+                                    <i class="fas fa-temperature-high fa-2x mt-2 text-success"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success-light">
+                                <div class="card-body text-center">
+                                    <div class="sensor-value sensor-value-lembab">65%</div>
+                                    <div class="sensor-label">Kelembaban Tanah</div>
+                                    <i class="fas fa-water fa-2x mt-2 text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success-light">
+                                <div class="card-body text-center">
+                                    <div class="sensor-value sensor-value-cahaya">1200</div>
+                                    <div class="sensor-label">Lux Cahaya</div>
+                                    <i class="fas fa-sun fa-2x mt-2 text-warning"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success-light">
+                                <div class="card-body text-center">
+                                    <div class="sensor-value sensor-value-tanah">7.2</div>
+                                    <div class="sensor-label">pH Tanah</div>
+                                    <i class="fas fa-flask fa-2x mt-2 text-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts and Status -->
+                    <div class="row">
+                        <!-- Growth Chart -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-chart-line me-2"></i> Grafik Pertumbuhan Tanaman</span>
+                                    <select class="form-select form-select-sm w-auto">
+                                        <option>7 Hari Terakhir</option>
+
+                                    </select>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="growthChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Field Status -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-map-marked-alt me-2"></i> Status Lahan
+                                </div>
+                                <div class="card-body">
+                                    <div id="landStatusList" class="list-group">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Lahan A</h6>
+                                                <small class="text-muted">Padi - 2.5 Ha</small>
+                                            </div>
+                                            <span class="status-badge bg-success">Normal</span>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Lahan B</h6>
+                                                <small class="text-muted">Jagung - 1.8 Ha</small>
+                                            </div>
+                                            <span class="status-badge bg-warning">Perlu Irigasi</span>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Lahan C</h6>
+                                                <small class="text-muted">Kedelai - 3.2 Ha</small>
+                                            </div>
+                                            <span class="status-badge bg-danger">Hama</span>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Lahan D</h6>
+                                                <small class="text-muted">Sayuran - 0.8 Ha</small>
+                                            </div>
+                                            <span class="status-badge bg-success">Normal</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Weather and Tasks -->
+                    <div class="row mt-4">
+                        <!-- Weather Forecast -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-cloud-sun me-2"></i> Prakiraan Cuaca
+                                </div>
+                                <div class="card-body">
+                                    <div class="row text-center">
+                                        <div class="col weatering">
+                                            <h6>Hari Ini</h6>
+                                            <i class="fas fa-sun fa-2x text-warning"></i>
+                                            <div>32°C / 24°C</div>
+                                            <small class="text-muted">Cerah</small>
+                                        </div>
+                                        <div class="col weatering">
+                                            <h6>Besok</h6>
+                                            <i class="fas fa-cloud-sun fa-2x text-secondary"></i>
+                                            <div>30°C / 25°C</div>
+                                            <small class="text-muted">Berawan</small>
+                                        </div>
+                                        <div class="col weatering">
+                                            <h6>Lusa</h6>
+                                            <i class="fas fa-cloud-rain fa-2x text-primary"></i>
+                                            <div>28°C / 23°C</div>
+                                            <small class="text-muted">Hujan Ringan</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Activities -->
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-history me-2"></i> Aktivitas Terkini
+                                </div>
+                                <div class="card-body" style="max-height: 250px; overflow-y: auto;">
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-tint bg-primary text-white rounded-circle p-2"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Irigasi diaktifkan</h6>
+                                            <small class="text-muted">Lahan B - 10 menit yang lalu</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-bug bg-danger text-white rounded-circle p-2"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Hama terdeteksi</h6>
+                                            <small class="text-muted">Lahan A - 1 jam yang lalu</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-3">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-user bg-info text-white rounded-circle p-2"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Petani masuk</h6>
+                                            <small class="text-muted">Budi - 2 jam yang lalu</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-temperature-high bg-warning text-white rounded-circle p-2"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="mb-0">Suhu meningkat</h6>
+                                            <small class="text-muted">Lahan C - 3 jam yang lalu</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Land Management Tab -->
+                <div class="tab-pane fade" id="land-management">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Manajemen Lahan</h2>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addLandModal">
+                            <i class="fas fa-plus me-2"></i>Tambah Lahan
+                        </button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-list me-2"></i> Daftar Lahan</span>
+                            <div class="input-group w-25">
+                                <input type="search" class="form-control form-control-sm" placeholder="Cari lahan...">
+                                <button class="btn btn-sm btn-outline-secondary" type="button">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tabel-lahan">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Lahan</th><th>Lokasi</th><th>Luas</th>
+                                        <th>Jenis Tanaman</th><th>Jenis Tanah</th><th>Status</th>
+                                        <th>aksi</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    
+                                </table>
+                            </div>
+                            
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(currentPage - 1)">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(1)">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(2)">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(3)">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPage(currentPage + 1)">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Tambahkan setelah card daftar lahan -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="mb-0">Manajemen Tanaman</h2>
+                        <button class="btn btn-success ms-2" data-bs-toggle="modal" data-bs-target="#addPlantInfoModal">
+                            <i class="fas fa-seedling me-2"></i>Input Informasi Tanaman
+                        </button>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-seedling me-2"></i> Informasi Tanaman</span>
+                            <div class="input-group w-25">
+                                <!-- <input type="search" class="form-control form-control-sm" placeholder="Cari tanaman..." id="searchPlant"> -->
+                                <input type="search" class="form-control form-control-sm" placeholder="Cari tanaman..." id="searchPlant">
+                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="searchPlants()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="tabel-tanaman">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Lahan</th>
+                                            <th>Nama Tanaman</th>
+                                            <th>Tanggal Tanam</th>
+                                            <th>Umur (hari)</th>
+                                            <th>Target Panen (kg)</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data akan diisi secara dinamis -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(currentPlantPage - 1)">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(1)">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(2)">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(3)">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#" onclick="loadPlantPage(currentPlantPage + 1)">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Modal tambah tanaman -->
+                <div class="modal fade" id="addPlantInfoModal" tabindex="-1" aria-labelledby="addPlantInfoModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addPlantInfoModalLabel">Input Informasi Tanaman</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="./auth/plans.php" id="plantInfoForm" method="post" >
+                                    <div class="mb-3">
+                                        <label for="selectLand" class="form-label">Pilih Lahan</label>
+                                        <!-- <select class="form-select" id="selectLand" required>
+                                            <option value="" selected disabled>-- Pilih Lahan --</option> -->
+                                        <select class="form-select" id="selectLand" name="land_id" required>
+                                            <option value="" disabled selected>-- Pilih Lahan --</option>
+                                        </select>
+
+                                        <!-- </select> -->
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="plantName" class="form-label">Nama Tanaman</label>
+                                        <input type="text" class="form-control" id="plantName" name="nama_tanaman" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="plantingDate" class="form-label">Tanggal Mulai Tanam</label>
+                                        <input type="date" class="form-control" id="plantingDate" name="tanggal_tanam" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="harvestTarget" class="form-label">Target Panen (kg)</label>
+                                        <input type="number" class="form-control" id="harvestTarget" name="target_panen" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="additionalNotes" class="form-label">Catatan Tambahan</label>
+                                        <textarea class="form-control" id="additionalNotes" name="catatan" rows="3"></textarea>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- edit plant modal -->
+                 <!-- Modal Edit Informasi Tanaman -->
+                 <div class="modal fade" id="editPlantModal" tabindex="-1" aria-labelledby="editPlantModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editPlantModalLabel">Edit Informasi Tanaman</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="./auth/plans_update.php" id="editPlantForm" method="post">
+                                        <!-- Hidden input untuk ID tanaman -->
+                                        <input type="hidden" id="editPlantId" name="id_tanaman">
+                                        
+                                        <div class="mb-3">
+                                            <label for="editSelectLand" class="form-label">Pilih Lahan</label>
+                                            <select class="form-select" id="editSelectLand" name="land_id" required>
+                                                <option value="" disabled selected>-- Pilih Lahan --</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editPlantName" class="form-label">Nama Tanaman</label>
+                                            <input type="text" class="form-control" id="editPlantName" name="nama_tanaman" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editPlantingDate" class="form-label">Tanggal Mulai Tanam</label>
+                                            <input type="date" class="form-control" id="editPlantingDate" name="tanggal_tanam" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editHarvestTarget" class="form-label">Target Panen (kg)</label>
+                                            <input type="number" class="form-control" id="editHarvestTarget" name="target_panen" min="1" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editAdditionalNotes" class="form-label">Catatan Tambahan</label>
+                                            <textarea class="form-control" id="editAdditionalNotes" name="catatan" rows="3"></textarea>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                
+                <!-- Sensor Monitoring Tab -->
+                <div class="tab-pane fade" id="sensor-monitoring">
+                    <h2 class="mb-4">Monitoring Sensor</h2>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-chart-bar me-2"></i> Data Sensor Real-time</span>
+                                    <select class="form-select form-select-sm w-auto">
+                                        <option>Suhu</option>
+                                        <option>Kelembaban</option>
+                                        <option>Cahaya</option>
+                                        <option>pH Tanah</option>
+                                    </select>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <canvas id="realtimeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-microchip me-2"></i> Status Perangkat
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor Suhu - Lahan A</h6>
+                                                <small class="text-muted">ID: ST-001</small>
+                                            </div>
+                                            <div>
+                                                <span class="badge bg-success me-2">Aktif</span>
+                                                <small class="text-muted">Baterai: 85%</small>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor Kelembaban - Lahan B</h6>
+                                                <small class="text-muted">ID: SM-002</small>
+                                            </div>
+                                            <div>
+                                                <span class="badge bg-success me-2">Aktif</span>
+                                                <small class="text-muted">Baterai: 72%</small>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor pH - Lahan C</h6>
+                                                <small class="text-muted">ID: SP-003</small>
+                                            </div>
+                                            <div>
+                                                <span class="badge bg-danger me-2">Tidak Aktif</span>
+                                                <small class="text-muted">Baterai: 12%</small>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor Cahaya - Lahan A</h6>
+                                                <small class="text-muted">ID: SL-004</small>
+                                            </div>
+                                            <div>
+                                                <span class="badge bg-success me-2">Aktif</span>
+                                                <small class="text-muted">Baterai: 91%</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-history me-2"></i> Riwayat Data Sensor</span>
+                            <div>
+                                <!-- <select class="form-select form-select-sm d-inline-block w-auto me-2">
+                                    <option>Suhu</option>
+                                    <option>Kelembaban</option>
+                                    <option>Cahaya</option>
+                                    <option>pH Tanah</option>
+                                </select>
+                                <select class="form-select form-select-sm d-inline-block w-auto">
+                                    <option>24 Jam Terakhir</option>
+                                    <option>7 Hari Terakhir</option>
+                                    <option>30 Hari Terakhir</option>
+                                </select> -->
+                                <select id="sensorTypeSelect" class="form-select form-select-sm w-auto me-2">
+                                    <option value="temperature">Suhu</option>
+                                    <option value="humidity">Kelembaban</option>
+                                    <option value="light">Cahaya</option>
+                                    <option value="ph">pH Tanah</option>
+                                </select>
+
+                                <select id="timeRangeSelect" class="form-select form-select-sm w-auto">
+                                    <option value="1">24 Jam Terakhir</option>
+                                    <option value="7">7 Hari Terakhir</option>
+                                    <option value="30">30 Hari Terakhir</option>
+                                </select>
+
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="historyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Recommendation Tab -->
+                <div class="tab-pane fade" id="ai-recommendation">
+                    <h2 class="mb-4">Rekomendasi & AI</h2>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-tint me-2"></i> Rekomendasi Irigasi
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i> Sistem merekomendasikan jadwal irigasi berdasarkan data kelembaban tanah dan prakiraan cuaca.
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table" id="irigasiTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Lahan</th>
+                                                    <th>Status Kelembaban</th>
+                                                    <th>Rekomendasi</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- <tr>
+                                                    <td>Lahan A</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>Tidak perlu irigasi</td>
+                                                    <td><button class="btn btn-sm btn-outline-primary">Detail</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan B</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 35%;" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">35%</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>Irigasi 30 menit pagi hari</td>
+                                                    <td><button class="btn btn-sm btn-outline-primary">Detail</button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan C</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">20%</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>Irigasi segera 45 menit</td>
+                                                    <td><button class="btn btn-sm btn-primary">Aktifkan</button></td>
+                                                </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-pills me-2"></i> Rekomendasi Pemupukan
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i> Sistem menganalisis kondisi tanah dan memberikan rekomendasi pemupukan yang optimal.
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table" id="rekomendasiTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Lahan</th>
+                                                    <th>pH Tanah</th>
+                                                    <th>Nutrisi</th>
+                                                    <th>Rekomendasi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id='rekomendasiBody'>
+                                                <!-- <tr>
+                                                    <td>Lahan A</td>
+                                                    <td>6.8</td>
+                                                    <td>N: Sedang, P: Rendah, K: Tinggi</td>
+                                                    <td>Pupuk NPK 15-30-15 (1kg/10m²)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan B</td>
+                                                    <td>7.2</td>
+                                                    <td>N: Tinggi, P: Sedang, K: Sedang</td>
+                                                    <td>Pupuk Organik (2kg/10m²)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan C</td>
+                                                    <td>5.9</td>
+                                                    <td>N: Rendah, P: Rendah, K: Rendah</td>
+                                                    <td>Pupuk NPK 20-20-20 (1.5kg/10m²) + Kapur</td>
+                                                </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-bug me-2"></i> Deteksi Hama/Penyakit
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-exclamation-triangle me-2"></i> <strong>Hama terdeteksi!</strong> di Lahan A dengan kemungkinan 87%.
+                                    </div>
+                                    
+                                    <div class="text-center mb-3">
+                                        <img src="/" class="img-fluid rounded mb-3" alt="Plant Disease" style="width: 400px;">
+                                        <h5>Kemungkinan: Kutu Daun</h5>
+                                        <p class="text-muted">Ditemukan pada 24 Mei 2025 10:15 WIB</p>
+                                    </div>
+                                    
+                                    <h6>Saran Penanganan:</h6>
+                                    <ul>
+                                        <li>Semprot dengan insektisida berbahan aktif imidakloprid</li>
+                                        <li>Lakukan rotasi tanaman</li>
+                                        <li>Gunakan perangkap kuning</li>
+                                        <li>Pantau perkembangan selama 3 hari</li>
+                                    </ul>
+                                    
+                                    <button class="btn btn-primary w-100 mt-3">
+                                        <i class="fas fa-book me-2"></i> Lihat Panduan Lengkap
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-calendar-check me-2"></i> Prediksi Panen
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-info-circle me-2"></i> Sistem memprediksi waktu panen optimal berdasarkan pertumbuhan tanaman dan kondisi lingkungan.
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Lahan</th>
+                                                    <th>Tanaman</th>
+                                                    <th>Tgl Tanam</th>
+                                                    <th>Prediksi Panen</th>
+                                                    <th>Estimasi Hasil</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="dataPrediksiPanen">
+                                                <!-- <tr>
+                                                    <td>Lahan A</td>
+                                                    <td>Padi</td>
+                                                    <td>15 Mar 2025</td>
+                                                    <td>25 Jun 2025</td>
+                                                    <td>6.5 ton/ha</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan B</td>
+                                                    <td>Jagung</td>
+                                                    <td>1 Apr 2025</td>
+                                                    <td>10 Jul 2025</td>
+                                                    <td>8.2 ton/ha</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Lahan C</td>
+                                                    <td>Kedelai</td>
+                                                    <td>20 Apr 2025</td>
+                                                    <td>5 Aug 2025</td>
+                                                    <td>2.8 ton/ha</td>
+                                                </tr> -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <h6>Faktor yang Mempengaruhi:</h6>
+                                        <div class="progress mb-2" style="height: 10px;">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 85%" title="Kondisi Tanaman">85%</div>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 10px;">
+                                            <div class="progress-bar bg-info" role="progressbar" style="width: 70%" title="Cuaca">70%</div>
+                                        </div>
+                                        <div class="progress mb-2" style="height: 10px;">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" title="Ketersediaan Air">60%</div>
+                                        </div>
+                                        <div class="progress" style="height: 10px;">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: 90%" title="Kondisi Tanah">90%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reports Tab -->
+                <div class="tab-pane fade" id="reports">
+                    <h2 class="mb-4">Laporan & Evaluasi</h2>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-file-alt me-2"></i> Buat Laporan Baru
+                                </div>
+                                <div class="card-body text-center">
+                                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#dailyReportModal">
+                                        <i class="fas fa-calendar-day me-2"></i> Laporan Harian
+                                    </button>
+                                    <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#weeklyReportModal">
+                                        <i class="fas fa-calendar-week me-2"></i> Laporan Mingguan
+                                    </button>
+                                    <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#monthlyReportModal">
+                                        <i class="fas fa-calendar-alt me-2"></i> Laporan Bulanan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-history me-2"></i> Laporan Terakhir</span>
+                                    <div class="input-group w-50">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Cari laporan...">
+                                        <button class="btn btn-sm btn-outline-secondary" type="button">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list-group">
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Laporan Harian - 23 Mei 2025</h6>
+                                                <small>1 hari lalu</small>
+                                            </div>
+                                            <p class="mb-1">Kondisi lahan stabil, tidak ada masalah signifikan.</p>
+                                            <small class="text-muted">Dibuat oleh: Admin</small>
+                                            <span class="badge bg-primary float-end"><i class="fas fa-download me-1"></i> PDF</span>
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Laporan Mingguan - Minggu 3 Mei 2025</h6>
+                                                <small>5 hari lalu</small>
+                                            </div>
+                                            <p class="mb-1">Peningkatan pertumbuhan tanaman sebesar 12% dibanding minggu sebelumnya.</p>
+                                            <small class="text-muted">Dibuat oleh: Petani A</small>
+                                            <span class="badge bg-primary float-end"><i class="fas fa-download me-1"></i> Excel</span>
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h6 class="mb-1">Laporan Bulanan - April 2025</h6>
+                                                <small>3 minggu lalu</small>
+                                            </div>
+                                            <p class="mb-1">Hasil panen bulan ini mencapai 95% dari target.</p>
+                                            <small class="text-muted">Dibuat oleh: Manager</small>
+                                            <span class="badge bg-primary float-end"><i class="fas fa-download me-1"></i> PDF</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-center">
+                                    <button class="btn btn-sm btn-outline-primary">Lihat Semua Laporan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-chart-pie me-2"></i> Analisis Produktivitas
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="chart-container">
+                                        <canvas id="productivityChart"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bulan</th>
+                                                    <th>Target (ton)</th>
+                                                    <th>Hasil (ton)</th>
+                                                    <th>Pencapaian</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Jan 2025</td>
+                                                    <td>25</td>
+                                                    <td>23.5</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 94%" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100">94%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Feb 2025</td>
+                                                    <td>28</td>
+                                                    <td>26.2</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 93.5%" aria-valuenow="93.5" aria-valuemin="0" aria-valuemax="100">93.5%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mar 2025</td>
+                                                    <td>30</td>
+                                                    <td>27.8</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 92.6%" aria-valuenow="92.6" aria-valuemin="0" aria-valuemax="100">92.6%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Apr 2025</td>
+                                                    <td>32</td>
+                                                    <td>30.5</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: 95.3%" aria-valuenow="95.3" aria-valuemin="0" aria-valuemax="100">95.3%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mei 2025</td>
+                                                    <td>35</td>
+                                                    <td>32.1</td>
+                                                    <td>
+                                                        <div class="progress" style="height: 20px;">
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 91.7%" aria-valuenow="91.7" aria-valuemin="0" aria-valuemax="100">91.7%</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- HR & Payroll Tab -->
+                <div class="tab-pane fade" id="hr-payroll">
+                    <h2 class="mb-4">Manajemen SDM & Penggajian</h2>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><i class="fas fa-users me-2"></i> Data Karyawan</span>
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                                        <i class="fas fa-plus me-1"></i> Tambah
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>Jabatan</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Budi Santoso</td>
+                                                    <td>Petani</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ani Wijaya</td>
+                                                    <td>Petani</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Joko Prasetyo</td>
+                                                    <td>Teknisi</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Siti Rahayu</td>
+                                                    <td>Admin</td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-money-bill-wave me-2"></i> Penggajian Bulan Ini
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>Gaji Pokok</th>
+                                                    <th>Lembur</th>
+                                                    <th>Total</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Budi Santoso</td>
+                                                    <td>Rp3.500.000</td>
+                                                    <td>Rp450.000</td>
+                                                    <td>Rp3.950.000</td>
+                                                    <td><span class="badge bg-success">Dibayar</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ani Wijaya</td>
+                                                    <td>Rp3.500.000</td>
+                                                    <td>Rp300.000</td>
+                                                    <td>Rp3.800.000</td>
+                                                    <td><span class="badge bg-success">Dibayar</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Joko Prasetyo</td>
+                                                    <td>Rp4.200.000</td>
+                                                    <td>Rp600.000</td>
+                                                    <td>Rp4.800.000</td>
+                                                    <td><span class="badge bg-warning">Proses</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Siti Rahayu</td>
+                                                    <td>Rp5.000.000</td>
+                                                    <td>Rp250.000</td>
+                                                    <td>Rp5.250.000</td>
+                                                    <td><span class="badge bg-danger">Belum</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#payrollModal">
+                                        <i class="fas fa-calculator me-2"></i> Hitung Penggajian
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fas fa-clock me-2"></i> Rekapitulasi Jam Kerja
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama</th>
+                                            <th>1 Minggu</th>
+                                            <th>2 Minggu</th>
+                                            <th>3 Minggu</th>
+                                            <th>4 Minggu</th>
+                                            <th>Total</th>
+                                            <th>Lembur</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Budi Santoso</td>
+                                            <td>40 jam</td>
+                                            <td>42 jam</td>
+                                            <td>45 jam</td>
+                                            <td>38 jam</td>
+                                            <td>165 jam</td>
+                                            <td>15 jam</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ani Wijaya</td>
+                                            <td>38 jam</td>
+                                            <td>40 jam</td>
+                                            <td>40 jam</td>
+                                            <td>35 jam</td>
+                                            <td>153 jam</td>
+                                            <td>8 jam</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Joko Prasetyo</td>
+                                            <td>45 jam</td>
+                                            <td>50 jam</td>
+                                            <td>48 jam</td>
+                                            <td>42 jam</td>
+                                            <td>185 jam</td>
+                                            <td>30 jam</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="mt-3">
+                                <button class="btn btn-outline-primary me-2">
+                                    <i class="fas fa-file-excel me-2"></i> Export Excel
+                                </button>
+                                <button class="btn btn-outline-secondary">
+                                    <i class="fas fa-print me-2"></i> Cetak
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings">
+                    <h2 class="mb-4">Pengaturan Sistem</h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-cog me-2"></i> Konfigurasi Umum
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">Nama Aplikasi</label>
+                                            <input type="text" class="form-control" value="AgriMonitor">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Zona Waktu</label>
+                                            <select class="form-select">
+                                                <option>WIB (UTC+7)</option>
+                                                <option>WITA (UTC+8)</option>
+                                                <option>WIT (UTC+9)</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Bahasa</label>
+                                            <select class="form-select">
+                                                <option>Indonesia</option>
+                                                <option>English</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Format Tanggal</label>
+                                            <select class="form-select">
+                                                <option>DD/MM/YYYY</option>
+                                                <option>MM/DD/YYYY</option>
+                                                <option>YYYY-MM-DD</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-microchip me-2"></i> Konfigurasi Sensor
+                                </div>
+                                <div class="card-body">
+                                    <div class="alert alert-info">
+                                        <i class="fas fa-info-circle me-2"></i> Tambah atau konfigurasi perangkat sensor yang terhubung dengan sistem.
+                                    </div>
+                                    
+                                    <div class="list-group mb-3">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor Suhu - ST-001</h6>
+                                                <small class="text-muted">Alamat IP: 192.168.1.101</small>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Konfigurasi</button>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor Kelembaban - SM-002</h6>
+                                                <small class="text-muted">Alamat IP: 192.168.1.102</small>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Konfigurasi</button>
+                                        </div>
+                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-1">Sensor pH - SP-003</h6>
+                                                <small class="text-muted">Alamat IP: 192.168.1.103</small>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary">Konfigurasi</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addSensorModal">
+                                        <i class="fas fa-plus me-2"></i> Tambah Sensor Baru
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-user-shield me-2"></i> Manajemen Pengguna
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Username</th>
+                                                    <th>Nama</th>
+                                                    <th>Role</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>admin</td>
+                                                    <td>Siti Rahayu</td>
+                                                    <td><span class="badge bg-danger">Admin</span></td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>manager</td>
+                                                    <td>Joko Prasetyo</td>
+                                                    <td><span class="badge bg-warning">Manager</span></td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>farmer1</td>
+                                                    <td>Budi Santoso</td>
+                                                    <td><span class="badge bg-primary">Petani</span></td>
+                                                    <td><span class="badge bg-success">Aktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>farmer2</td>
+                                                    <td>Ani Wijaya</td>
+                                                    <td><span class="badge bg-primary">Petani</span></td>
+                                                    <td><span class="badge bg-secondary">Nonaktif</span></td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-warning"><i class="fas fa-edit"></i></button>
+                                                        <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                                        <i class="fas fa-user-plus me-2"></i> Tambah Pengguna Baru
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <i class="fas fa-bell me-2"></i> Pengaturan Notifikasi
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="pestNotification" checked>
+                                            <label class="form-check-label" for="pestNotification">Notifikasi Deteksi Hama</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="irrigationNotification" checked>
+                                            <label class="form-check-label" for="irrigationNotification">Notifikasi Irigasi</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="sensorNotification" checked>
+                                            <label class="form-check-label" for="sensorNotification">Notifikasi Status Sensor</label>
+                                        </div>
+                                        <div class="form-check form-switch mb-3">
+                                            <input class="form-check-input" type="checkbox" id="weatherNotification">
+                                            <label class="form-check-label" for="weatherNotification">Notifikasi Cuaca Ekstrem</label>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email Notifikasi</label>
+                                            <input type="email" class="form-control" value="admin@agrimonitor.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Nomor Telepon (WhatsApp)</label>
+                                            <input type="tel" class="form-control" value="+6281234567890">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <!-- Add Land Modal -->
+    <div class="modal fade" id="addLandModal" tabindex="-1" aria-labelledby="addLandModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addLandModalLabel">Tambah Lahan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="./auth/land.php" method="post" class="formTambahLahan" id="landForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nama Lahan</label>
+                                <input type="text" class="form-control" placeholder="Contoh: Lahan A" name="nama_lahan" >
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Luas Lahan</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" placeholder="Contoh: 2.5" name="luas">
+                                    <span class="input-group-text">Hektar</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Jenis Tanaman</label>
+                                <select class="form-select" name="jenis_tanaman">
+                                    <option selected>Pilih Jenis Tanaman</option>
+                                    <option>Padi</option>
+                                    <option>Jagung</option>
+                                    <option>Kedelai</option>
+                                    <option>Sayuran</option>
+                                    <option>Buah-buahan</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Jenis Tanah</label>
+                                <select class="form-select" name="jenis_tanah">
+                                    <option selected>Pilih Jenis Tanah</option>
+                                    <option>Latosol</option>
+                                    <option>Andosol</option>
+                                    <option>Regosol</option>
+                                    <option>Aluvial</option>
+                                    <option>Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Lokasi (Koordinat GPS)</label>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text">Latitude</span>
+                                <input type="text" class="form-control" placeholder="-6.12345" name="Latitude">
+                                <span class="input-group-text">Longitude</span>
+                                <input type="text" class="form-control" placeholder="106.12345" name="Longitude">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Catatan Tambahan</label>
+                                <textarea class="form-control" name="catatan" rows="3" placeholder="Deskripsi lahan atau catatan khusus"></textarea>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-map-marker-alt me-2"></i>Dapatkan Lokasi Sekarang
+                        </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Lahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Employee Modal -->
+    <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addEmployeeModalLabel">Tambah Karyawan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" placeholder="Contoh: Budi Santoso">
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Jabatan</label>
+                                <select class="form-select">
+                                    <option selected>Pilih Jabatan</option>
+                                    <option>Petani</option>
+                                    <option>Teknisi</option>
+                                    <option>Admin</option>
+                                    <option>Manager</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal Bergabung</label>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea class="form-control" rows="2" placeholder="Alamat lengkap"></textarea>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nomor Telepon</label>
+                                <input type="tel" class="form-control" placeholder="081234567890">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" placeholder="email@contoh.com">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Foto</label>
+                            <input type="file" class="form-control">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary">Simpan Karyawan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payroll Modal -->
+    <div class="modal fade" id="payrollModal" tabindex="-1" aria-labelledby="payrollModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="payrollModalLabel">Hitung Penggajian</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Periode</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control">
+                                <span class="input-group-text">s/d</span>
+                                <input type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Karyawan</label>
+                            <select class="form-select">
+                                <option selected>Semua Karyawan</option>
+                                <option>Budi Santoso</option>
+                                <option>Ani Wijaya</option>
+                                <option>Joko Prasetyo</option>
+                                <option>Siti Rahayu</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Gaji Pokok</th>
+                                    <th>Jam Lembur</th>
+                                    <th>Upah Lembur</th>
+                                    <th>Bonus</th>
+                                    <th>Potongan</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Budi Santoso</td>
+                                    <td>Rp3.500.000</td>
+                                    <td>15 jam</td>
+                                    <td>Rp450.000</td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" value="0">
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" value="0">
+                                    </td>
+                                    <td>Rp3.950.000</td>
+                                </tr>
+                                <tr>
+                                    <td>Ani Wijaya</td>
+                                    <td>Rp3.500.000</td>
+                                    <td>8 jam</td>
+                                    <td>Rp300.000</td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" value="0">
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" value="0">
+                                    </td>
+                                    <td>Rp3.800.000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-print me-2"></i>Cetak Slip Gaji
+                            </button>
+                        </div>
+                        <div>
+                            <strong>Total Penggajian: Rp7.750.000</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Proses Pembayaran</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Sensor Modal -->
+    <div class="modal fade" id="addSensorModal" tabindex="-1" aria-labelledby="addSensorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addSensorModalLabel">Tambah Sensor Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Jenis Sensor</label>
+                            <select class="form-select">
+                                <option selected>Pilih Jenis Sensor</option>
+                                <option>Suhu</option>
+                                <option>Kelembaban Tanah</option>
+                                <option>pH Tanah</option>
+                                <option>Intensitas Cahaya</option>
+                                <option>Kelembaban Udara</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">ID Sensor</label>
+                            <input type="text" class="form-control" placeholder="Contoh: ST-001">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Lokasi (Lahan)</label>
+                            <select class="form-select">
+                                <option selected>Pilih Lahan</option>
+                                <option>Lahan A</option>
+                                <option>Lahan B</option>
+                                <option>Lahan C</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Alamat IP</label>
+                            <input type="text" class="form-control" placeholder="Contoh: 192.168.1.101">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Interval Pengiriman Data (detik)</label>
+                            <input type="number" class="form-control" value="60">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary">Simpan Sensor</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add User Modal -->
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addUserModalLabel">Tambah Pengguna Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" class="form-control" placeholder="Contoh: farmer1">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" placeholder="Contoh: Budi Santoso">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Role</label>
+                            <select class="form-select">
+                                <option selected>Pilih Role</option>
+                                <option>Admin</option>
+                                <option>Manager</option>
+                                <option>Petani</option>
+                                <option>Teknisi</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" placeholder="email@contoh.com">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Minimal 8 karakter">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Konfirmasi Password</label>
+                            <input type="password" class="form-control" placeholder="Ketik ulang password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary">Simpan Pengguna</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Daily Report Modal -->
+    <div class="modal fade" id="dailyReportModal" tabindex="-1" aria-labelledby="dailyReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="dailyReportModalLabel">Laporan Harian</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" value="2025-05-24">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Lahan</label>
+                                <select class="form-select">
+                                    <option selected>Semua Lahan</option>
+                                    <option>Lahan A</option>
+                                    <option>Lahan B</option>
+                                    <option>Lahan C</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Aktivitas Hari Ini</label>
+                            <textarea class="form-control" rows="3" placeholder="Deskripsi aktivitas yang dilakukan hari ini"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Masalah yang Ditemui</label>
+                            <textarea class="form-control" rows="3" placeholder="Deskripsi masalah atau kendala"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tindakan yang Diambil</label>
+                            <textarea class="form-control" rows="3" placeholder="Solusi atau tindakan yang dilakukan"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Catatan Tambahan</label>
+                            <textarea class="form-control" rows="2" placeholder="Catatan lain yang perlu disampaikan"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Lampiran</label>
+                            <input type="file" class="form-control">
+                            <small class="text-muted">Anda dapat mengunggah foto atau dokumen pendukung</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary">Simpan Laporan</button>
+                    <button type="button" class="btn btn-success">Simpan & Cetak</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Weekly Report Modal -->
+    <div class="modal fade" id="weeklyReportModal" tabindex="-1" aria-labelledby="weeklyReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="weeklyReportModalLabel">Laporan Mingguan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Minggu Ke</label>
+                                <select class="form-select">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option selected>4</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Bulan</label>
+                                <select class="form-select">
+                                    <option selected>Mei</option>
+                                    <option>Juni</option>
+                                    <option>Juli</option>
+                                    <option>Agustus</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Tahun</label>
+                                <input type="number" class="form-control" value="2025">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Ringkasan Mingguan</label>
+                            <textarea class="form-control" rows="3" placeholder="Ringkasan aktivitas dan perkembangan selama seminggu"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Pertumbuhan Tanaman</label>
+                            <textarea class="form-control" rows="3" placeholder="Perkembangan pertumbuhan tanaman"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Masalah & Solusi</label>
+                            <textarea class="form-control" rows="3" placeholder="Masalah yang muncul dan solusi yang diterapkan"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Rencana Minggu Depan</label>
+                            <textarea class="form-control" rows="3" placeholder="Rencana kerja untuk minggu berikutnya"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Lampiran</label>
+                            <input type="file" class="form-control" multiple>
+                            <small class="text-muted">Anda dapat mengunggah foto atau dokumen pendukung</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success">Simpan Laporan</button>
+                    <button type="button" class="btn btn-primary">Simpan & Cetak</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Monthly Report Modal -->
+    <div class="modal fade" id="monthlyReportModal" tabindex="-1" aria-labelledby="monthlyReportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="monthlyReportModalLabel">Laporan Bulanan</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Bulan</label>
+                                <select class="form-select">
+                                    <option selected>Mei</option>
+                                    <option>Juni</option>
+                                    <option>Juli</option>
+                                    <option>Agustus</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tahun</label>
+                                <input type="number" class="form-control" value="2025">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Ringkasan Bulanan</label>
+                            <textarea class="form-control" rows="3" placeholder="Ringkasan aktivitas dan perkembangan selama sebulan"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Hasil Produksi</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Lahan</th>
+                                            <th>Jenis Tanaman</th>
+                                            <th>Hasil (kg)</th>
+                                            <th>Kualitas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Lahan A</td>
+                                            <td>Padi</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                            <td>
+                                                <select class="form-select form-select-sm">
+                                                    <option>Sangat Baik</option>
+                                                    <option>Baik</option>
+                                                    <option selected>Cukup</option>
+                                                    <option>Kurang</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lahan B</td>
+                                            <td>Jagung</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                            <td>
+                                                <select class="form-select form-select-sm">
+                                                    <option>Sangat Baik</option>
+                                                    <option selected>Baik</option>
+                                                    <option>Cukup</option>
+                                                    <option>Kurang</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Analisis Biaya</label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Biaya (Rp)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Benih</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pupuk</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pestisida</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tenaga Kerja</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lain-lain</td>
+                                            <td><input type="number" class="form-control form-control-sm" placeholder="0"></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total Biaya</th>
+                                            <th>Rp0</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Evaluasi & Rencana</label>
+                            <textarea class="form-control" rows="3" placeholder="Evaluasi bulan ini dan rencana untuk bulan berikutnya"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Lampiran</label>
+                            <input type="file" class="form-control" multiple>
+                            <small class="text-muted">Anda dapat mengunggah foto atau dokumen pendukung</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-info">Simpan Laporan</button>
+                    <button type="button" class="btn btn-primary">Simpan & Cetak</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Profile modal -->
+     <!-- Modal Profile -->
+        <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="profileModalLabel"><i class="fas fa-user-circle me-2"></i>Profile Pengguna</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                <!-- Kolom Foto Profil -->
+                <div class="col-md-4 text-center">
+                    <div class="profile-img-container mb-3">
+                    <img src="https://via.placeholder.com/150" alt="Foto Profil" class="img-thumbnail rounded-circle mb-2" id="profileImage">
+                    <button class="btn btn-sm btn-outline-success btn-block mt-2" id="changePhotoBtn">
+                        <i class="fas fa-camera me-1"></i> Ganti Foto
+                    </button>
+                    <input type="file" name="profile_photo" id="profilePhotoUpload" accept="image/*">
+                    </div>
+                    <div class="card mb-3">
+                    <div class="card-body text-center">
+                        <h5 id="userName">Nama Pengguna</h5>
+                        <p class="text-muted mb-1" id="userRole">Petani</p>
+                        <p class="text-muted" id="userSince">Bergabung sejak Jan 2023</p>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Kolom Informasi Profil -->
+                <div class="col-md-8">
+                    <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Informasi</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Aktivitas</button>
+                    </li>
+                    </ul>
+                    
+                    <div class="tab-content p-3 border border-top-0 rounded-bottom" id="profileTabsContent">
+                    <!-- Tab Informasi -->
+                    <div class="tab-pane fade show active" id="info" role="tabpanel">
+                        <form method="post" action="auth/update_user.php" >
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            <label for="firstName" class="form-label">Nama Depan</label>
+                            <input type="text" class="form-control" name="firstName" id="firstName" value="John">
+                            </div>
+                            <div class="col-md-6">
+                            <label for="lastName" class="form-label">Nama Belakang</label>
+                            <input type="text" class="form-control" name="lastName" id="lastName" value="Doe">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" id="email" value="john.doe@example.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Telepon</label>
+                            <input type="tel" class="form-control" name="phone" id="phone" value="+628123456789">
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Alamat</label>
+                            <textarea class="form-control" name="address" id="address" rows="2">Jl. Pertanian No. 123, Desa Sukamaju</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="farmSize" class="form-label">Luas Lahan (ha)</label>
+                            <input type="number" name="farmSize" class="form-control" id="farmSize" value="2.5">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-success" id="saveProfileBtn"><i class="fas fa-save me-1"></i> Simpan Perubahan</button>
+                        </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Tab Aktivitas -->
+                    <div class="tab-pane fade" id="activity" role="tabpanel">
+                        <div class="activity-list">
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 text-success me-3">
+                            <i class="fas fa-seedling fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Menanam Padi</h6>
+                            <p class="mb-0 text-muted">Varietas: Ciherang | Luas: 0.5 ha</p>
+                            <small class="text-muted">2 hari yang lalu</small>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="flex-shrink-0 text-primary me-3">
+                            <i class="fas fa-tint fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Penyiraman</h6>
+                            <p class="mb-0 text-muted">Lahan Utara | Durasi: 30 menit</p>
+                            <small class="text-muted">5 hari yang lalu</small>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 text-warning me-3">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <div>
+                            <h6 class="mb-0">Analisis Hasil Panen</h6>
+                            <p class="mb-0 text-muted">Hasil: 3.2 ton/ha | Peningkatan 15%</p>
+                            <small class="text-muted">2 minggu yang lalu</small>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Script -->
+    <script>
+
+        // When showing modal
+        document.getElementById('addLandModal').addEventListener('shown.bs.modal', function() {
+        this.removeAttribute('aria-hidden');
+        });
+        
+        // When hiding modal
+        document.getElementById('addLandModal').addEventListener('hide.bs.modal', function() {
+            this.setAttribute('aria-hidden', 'true');
+        });
+        // Sidebar Toggle
+        document.getElementById('mobileSidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('mainContent').classList.toggle('active');
+        });
+        
+        // Set current date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', options);
+        
+        // Charts
+        // Growth Chart
+        const growthCtx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['1 Minggu', '2 Minggu', '3 Minggu', '4 Minggu', '5 Minggu', '6 Minggu', '7 Minggu'],
+                datasets: [
+                    {
+                        label: 'Tinggi Tanaman (cm)',
+                        data: [15, 25, 35, 50, 65, 80, 95],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Jumlah Daun',
+                        data: [4, 6, 8, 10, 12, 14, 16],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Realtime Chart
+        // const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
+        // const realtimeChart = new Chart(realtimeCtx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: Array.from({length: 20}, (_, i) => i + 1),
+        //         datasets: [{
+        //             label: 'Suhu (°C)',
+        //             data: Array.from({length: 20}, () => Math.floor(Math.random() * 10) + 25),
+        //             borderColor: '#FF5722',
+        //             backgroundColor: 'rgba(255, 87, 34, 0.1)',
+        //             tension: 0.1,
+        //             fill: true
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             }
+        //         },
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: false,
+        //                 min: 20,
+        //                 max: 35
+        //             }
+        //         }
+        //     }
+        // });
+
+        // // History Chart
+        // const historyCtx = document.getElementById('historyChart').getContext('2d');
+        // const historyChart = new Chart(historyCtx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+        //         datasets: [{
+        //             label: 'Suhu Rata-rata (°C)',
+        //             data: [28, 29, 30, 31, 29, 27, 26],
+        //             backgroundColor: 'rgba(255, 152, 0, 0.7)',
+        //             borderColor: 'rgba(255, 152, 0, 1)',
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true,
+        //         maintainAspectRatio: false,
+        //         plugins: {
+        //             legend: {
+        //                 position: 'top',
+        //             }
+        //         },
+        //         scales: {
+        //             y: {
+        //                 beginAtZero: false,
+        //                 min: 20,
+        //                 max: 35
+        //             }
+        //         }
+        //     }
+        // });
+        
+        // Productivity Chart
+        const productivityCtx = document.getElementById('productivityChart').getContext('2d');
+        const productivityChart = new Chart(productivityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Padi', 'Jagung', 'Kedelai', 'Sayuran', 'Buah'],
+                datasets: [{
+                    data: [35, 25, 15, 15, 10],
+                    backgroundColor: [
+                        '#4CAF50',
+                        '#8BC34A',
+                        '#CDDC39',
+                        '#FFC107',
+                        '#FF9800'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Distribusi Produksi per Tanaman',
+                        font: {
+                            size: 16
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Simulate real-time data updates
+        setInterval(() => {
+            // Update realtime chart
+            const realtimeData = realtimeChart.data.datasets[0].data;
+            realtimeData.shift();
+            realtimeData.push(Math.floor(Math.random() * 10) + 25);
+            realtimeChart.update();
+        }, 2000);
+
+
+        
+    </script>
+
+    <script>
+        // async function updateHistoryChart(type = 'temperature', range = 7) {
+        //     const res = await fetch(`./auth/get_history_data.php?type=${type}&range=${range}`);
+        //     const historyData = await res.json();
+
+        //     historyChart.data.labels = historyData.labels;
+        //     historyChart.data.datasets[0].data = historyData.data;
+        //     historyChart.data.datasets[0].label = `Rata-rata ${type}`;
+
+        //     historyChart.update();
+        // }
+
+            const historyCtx = document.getElementById('historyChart').getContext('2d');
+            const historyChart = new Chart(historyCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                label: 'Data Sensor',
+                data: [],
+                backgroundColor: 'rgba(33, 150, 243, 0.6)',
+                borderColor: 'rgba(33, 150, 243, 1)',
+                borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                y: {
+                    beginAtZero: true
+                }
+                }
+            }
+            });
+
+            function updateChart() {
+            const type = document.getElementById('sensorTypeSelect').value;
+            const range = document.getElementById('timeRangeSelect').value;
+
+            fetch(`./auth/get_sensor_data.php?type=${type}&range=${range}`)
+                .then(response => response.json())
+                .then(data => {
+                historyChart.data.labels = data.labels;
+                historyChart.data.datasets[0].data = data.data;
+                historyChart.data.datasets[0].label = `${type.charAt(0).toUpperCase() + type.slice(1)} Rata-rata`;
+                historyChart.update();
+                });
+            }
+
+            document.getElementById('sensorTypeSelect').addEventListener('change', updateChart);
+            document.getElementById('timeRangeSelect').addEventListener('change', updateChart);
+
+            updateChart();
+
+     </script>
+
+     <!-- dropdown pilih land form plans -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const select = document.getElementById('selectLand');
+
+    // Fetch dan isi dropdown
+    fetch('./auth/dropdown_lahan.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                const option = document.createElement('option');
+                option.text = 'Gagal mengambil data';
+                option.disabled = true;
+                select.add(option);
+                return;
+            }
+
+            data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.text = item.nama_lahan;
+                select.add(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+    // Saat user memilih lahan, kirim ke PHP
+    select.addEventListener("change", function () {
+    const selectedLandId = select.value;
+    console.log("Selected Land ID:", selectedLandId); // Debug
+
+    if (!selectedLandId) {
+        console.error("Lahan belum dipilih!");
+        return;
+    }
+
+    fetch('./auth/set_selected_land.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ land_id: selectedLandId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            console.error('Gagal menyimpan session lahan:', data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+});
+</script>
+
+
+
+
+
+
+    <script>
+        async function updateRealtimeChart(type = 'temperature') {
+            const res = await fetch(`./auth/get_sensor_data.php?type=${type}`);
+            const sensorData = await res.json();
+
+            realtimeChart.data.labels = sensorData.labels;
+            realtimeChart.data.datasets[0].data = sensorData.data;
+            realtimeChart.data.datasets[0].label = type.charAt(0).toUpperCase() + type.slice(1);
+            realtimeChart.update();
+        }
+
+        const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
+        const realtimeChart = new Chart(realtimeCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Loading...',
+                    data: [],
+                    borderColor: '#FF5722',
+                    backgroundColor: 'rgba(255, 87, 34, 0.1)',
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 20,
+                        max: 40
+                    }
+                }
+            }
+        });
+
+        updateRealtimeChart();
+
+        // Jika dropdown berubah
+        document.querySelectorAll('select.form-select')[0].addEventListener('change', function() {
+            let value = this.value.toLowerCase();
+            if (value === 'kelembaban') value = 'humidity';
+            else if (value === 'cahaya') value = 'light';
+            else if (value === 'ph tanah') value = 'ph';
+            else if (value === 'suhu') value = 'temperature';
+
+            updateRealtimeChart(value);
+        });
+    </script>
+
+
+    <!-- <script>
+        window.addEventListener("DOMContentLoaded", () => {
+            fetch('./auth/get_land.php') // sesuaikan path-nya dengan posisi file ini
+                .then(response => response.text())
+                .then(data => {
+                    document.querySelector('#tabel-lahan tbody').innerHTML = data;
+                })
+                .catch(error => console.error('Gagal memuat data lahan:', error));
+        }); -->
+    </script>
+
+    <script>
+        let currentPage = 1;
+
+        function loadPage(page) {
+            if (page < 1) return;
+            fetch(`auth/get_land_admin.php?page=${page}`)
+                .then(res => res.text())
+                .then(data => {
+                    document.querySelector('#tabel-lahan tbody').innerHTML = data;
+                    currentPage = page;
+                })
+                .catch(err => console.error("Gagal muat data:", err));
+        }
+
+        // Panggil halaman pertama saat halaman dimuat
+        window.addEventListener("DOMContentLoaded", () => {
+            loadPage(1);
+        });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const searchInput = document.querySelector("input[placeholder='Cari lahan...']");
+                const searchButton = document.querySelector(".input-group button");
+
+                function loadLahan(page = 1, search = '') {
+                    fetch(`auth/get_land_admin.php?page=${page}&search=${encodeURIComponent(search)}`)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.querySelector("#tabel-lahan tbody").innerHTML = html;
+                        })
+                        .catch(error => {
+                            console.error("Gagal mengambil data:", error);
+                            document.querySelector("#tabel-lahan tbody").innerHTML =
+                                "<tr><td colspan='6'>Gagal mengambil data lahan.</td></tr>";
+                        });
+                }
+
+                searchButton.addEventListener("click", function () {
+                    const keyword = searchInput.value.trim();
+                    loadLahan(1, keyword); // Cari mulai dari halaman 1
+                });
+
+                // OPTIONAL: pencarian saat tekan Enter
+                searchInput.addEventListener("keyup", function (e) {
+                    if (e.key === "Enter") {
+                        searchButton.click();
+                    }
+                });
+
+                // Load data pertama kali
+                loadLahan();
+            });
+        </script>
+
+        <script>
+            function deleteLand(id) {
+    if (confirm("Yakin ingin menghapus lahan ini?")) {
+        fetch(`auth/delete_land.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_lahan: id })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Lahan berhasil dihapus");
+                location.reload(); // atau panggil fungsi loadLahan()
+            } else {
+                alert("Gagal menghapus lahan: " + data.message);
+            }
+        })
+        .catch(err => {
+            alert("Terjadi kesalahan: " + err);
+        });
+    }
+}
+
+        </script>
+
+    <script>
+    let currentPlantPage = 1;
+
+    function loadPlantPage(page = 1, search = '') {
+        if (page < 1) return;
+
+        fetch(`auth/get_plant_data.php?page=${page}&search=${encodeURIComponent(search)}`)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#tabel-tanaman tbody');
+                tbody.innerHTML = '';
+
+                if (data.plants.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6">Tidak ada data ditemukan.</td></tr>';
+                    return;
+                }
+
+                data.plants.forEach(plant => {
+                    const today = new Date();
+                    const plantingDate = new Date(plant.tanggal_tanam);
+                    const age = Math.floor((today - plantingDate) / (1000 * 60 * 60 * 24));
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${plant.nama_lahan}</td>
+                        <td>${plant.nama_tanaman}</td>
+                        <td>${plant.tanggal_tanam}</td>
+                        <td>${age}</td>
+                        <td>${plant.target_panen}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deletePlant(${plant.id_tanaman})">Hapus</button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                currentPlantPage = page;
+            })
+            .catch(error => {
+                console.error('Gagal mengambil data tanaman:', error);
+                document.querySelector('#tabel-tanaman tbody').innerHTML = '<tr><td colspan="6">Gagal mengambil data tanaman.</td></tr>';
+            });
+    }
+
+    function searchPlants() {
+        const keyword = document.querySelector('#searchPlant').value.trim();
+        loadPlantPage(1, keyword);
+    }
+
+
+
+    function deletePlant(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus data tanaman ini?")) {
+            fetch(`auth/delete_plant.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id_tanaman: id })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Data berhasil dihapus");
+                    loadPlantPage(currentPlantPage);
+                } else {
+                    alert("Gagal menghapus data: " + data.message);
+                }
+            })
+            .catch(err => alert("Terjadi kesalahan: " + err));
+        }
+    }
+
+    // Initial setup
+    window.addEventListener("DOMContentLoaded", () => {
+        loadPlantPage(1);
+        document.querySelector("#searchPlant").addEventListener("keyup", function(e) {
+            if (e.key === "Enter") searchPlants();
+        });
+    });
+</script>
+
+        
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fieldSelect = document.getElementById("fieldSelect-dashboard");
+
+    // Ambil dropdown lahan
+    fetch("auth/dropdown_lahan.php")
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(field => {
+                const option = document.createElement("option");
+                option.value = field.id;
+                option.textContent = field.nama_lahan;
+                fieldSelect.appendChild(option);
+            });
+        });
+
+    // Fungsi untuk update ringkasan
+    function updateSummary(idLahan = 'all') {
+        fetch(`auth/dashboard_sensor.php?id_lahan=${idLahan}`)
+            .then(res => res.json())
+            .then(data => {
+                console.log("Selected Lahan ID:", idLahan);
+
+                console.log(data); 
+                document.querySelector(".sensor-value-suhu").textContent = `${parseFloat(data.suhu).toFixed(1)}°C`;
+                document.querySelector(".sensor-value-lembab").textContent = `${parseFloat(data.kelembaban).toFixed(1)}%`;
+                document.querySelector(".sensor-value-cahaya").textContent = `${parseFloat(data.lux).toFixed(0)}`;
+                document.querySelector(".sensor-value-tanah").textContent = `${parseFloat(data.ph).toFixed(1)}`;
+            });
+    }
+
+    // Saat dropdown berubah
+    fieldSelect.addEventListener("change", function () {
+        const selectedId = this.value;
+        updateSummary(selectedId);
+    });
+
+    // Load awal
+    updateSummary(); // 'all'
+});
+</script>
+
+<script>
+function updateCuaca() {
+    fetch('auth/predict_weater.php')
+        .then(res => res.json())
+        .then(data => {
+            const cuaca = [data.today, data.tomorrow, data.day_after];
+            const elements = document.querySelectorAll('.weatering');
+
+            elements.forEach((el, index) => {
+                const info = cuaca[index];
+                const icon = el.querySelector('i');
+                const temp = el.querySelector('div');
+                const status = el.querySelector('small');
+
+                // Update suhu max/min
+                temp.innerText = `${info.max}°C / ${info.min}°C`;
+
+                // Update status
+                status.innerText = info.status;
+
+                // Ganti icon
+                icon.className = `fas ${info.icon} fa-2x ${info.color}`;
+            });
+        });
+}
+
+updateCuaca();
+</script>
+
+
+<script>
+function getBadgeClass(status) {
+    switch (status) {
+        case 'Aktif': return 'bg-success';
+        case 'Maintenance': return 'bg-warning';
+        case 'Nonaktif': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+async function loadLandStatus() {
+    try {
+        const response = await fetch('auth/get_land_status.php');
+        const data = await response.json();
+        const container = document.getElementById('landStatusList');
+        container.innerHTML = '';
+
+        data.forEach(land => {
+            const item = document.createElement('div');
+            item.className = 'list-group-item d-flex justify-content-between align-items-center';
+            item.innerHTML = `
+                <div>
+                    <h6 class="mb-1">${land.nama_lahan}</h6>
+                    <small class="text-muted">${land.jenis_tanaman} - ${parseFloat(land.luas)} Ha</small>
+                </div>
+                <span class="status-badge ${getBadgeClass(land.status)}">${land.status}</span>
+            `;
+            container.appendChild(item);
+        });
+    } catch (error) {
+        console.error('Gagal memuat status lahan:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadLandStatus);
+</script>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Buka modal ketika menu profil diklik
+    const openModalBtn = document.querySelector('.dropdown-item[href="#"]');
+    if (openModalBtn) {
+      openModalBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+        profileModal.show();
+      });
+    }
+
+    // Ganti foto profil
+    const changePhotoBtn = document.getElementById('changePhotoBtn');
+    const photoInput = document.getElementById('profilePhotoUpload');
+    const profileImage = document.getElementById('profileImage');
+
+    if (changePhotoBtn && photoInput && profileImage) {
+      changePhotoBtn.addEventListener('click', function () {
+        photoInput.click();
+      });
+
+      photoInput.addEventListener('change', function (e) {
+        if (e.target.files && e.target.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            profileImage.src = event.target.result;
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      });
+    }
+
+    // Simpan profil (submit form)
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+      profileForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(profileForm);
+
+        fetch('auth/save_profile.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Profil berhasil diperbarui!');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+            modal.hide();
+          } else {
+            alert('Gagal menyimpan: ' + data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan saat menyimpan profil.');
+        });
+      });
+    }
+  });
+</script>
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('auth/profil.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error); // misal: "Belum login"
+                return;
+            }
+
+            // Update form input
+            document.getElementById('firstName').value = data.first_name;
+            document.getElementById('lastName').value = data.last_name;
+            document.getElementById('email').value = data.email;
+            document.getElementById('phone').value = data.telepon;
+            document.getElementById('address').value = data.alamat;
+            document.getElementById('farmSize').value = data.luas_lahan;
+
+            // Update tampilan profil
+            document.getElementById('userName').innerText = data.first_name + ' ' + data.last_name;
+            document.getElementById('userRole').innerText = 'Petani';
+            document.getElementById('userSince').innerText = 'Bergabung sejak 2023';
+        })
+        .catch(error => {
+            console.error('Gagal mengambil data profil:', error);
+        });
+});
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetch('auth/prediksi_panen.php')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('dataPrediksiPanen').innerHTML = data;
+        })
+        .catch(error => {
+            console.error('Gagal mengambil data:', error);
+        });
+});
+</script>
+
+
+
+
+<!-- Rekomendasi irigasi dll -->
+
+<script>
+    fetch('auth/rekomendasi_irigasi_admin.php')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#irigasiTable tbody');
+            data.forEach(item => {
+                const row = document.createElement('tr');
+
+                row.innerHTML = `
+                    <td>${item.nama_lahan}</td>
+                    <td>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar ${item.warna}" role="progressbar"
+                                 style="width: ${item.soil_moisture}%;"
+                                 aria-valuenow="${item.soil_moisture}" aria-valuemin="0" aria-valuemax="100">
+                                 ${item.soil_moisture}%
+                            </div>
+                        </div>
+                    </td>
+                    <td>${item.rekomendasi}</td>
+                    <td><button class="btn btn-sm ${item.aksi === 'Aktifkan' ? 'btn-primary' : 'btn-outline-primary'}">${item.aksi}</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Gagal mengambil data:', error));
+</script>
+
+
+<!-- Rekomendasi pemupukan dll -->
+    <script>
+    fetch('auth/rekomendasi_pemupukan_admin.php')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.getElementById('rekomendasiBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
+                    <td>${item.nama_lahan}</td>
+                    <td>${item.ph}</td>
+                    <td>Data nutrisi tidak tersedia</td>
+                    <td>${item.rekomendasi}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        })
+        .catch(error => {
+            console.error('Gagal mengambil data:', error);
+        });
+    </script>
+
+
+
+ <!-- <script src="dashboard.js"></script> -->
+
+</body>
+</html>
