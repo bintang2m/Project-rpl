@@ -182,17 +182,17 @@
                         <i class="fas fa-tractor"></i> Manajemen Lahan
                     </a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="#sensor-monitoring" class="nav-link" data-bs-toggle="pill">
                         <i class="fas fa-microchip"></i> Monitoring Sensor
                     </a>
-                </li> -->
+                </li>
                 <li class="nav-item">
                     <a href="#ai-recommendation" class="nav-link" data-bs-toggle="pill">
                         <i class="fas fa-robot"></i> Rekomendasi & AI
                     </a>
                 </li>
-                <!-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="#reports" class="nav-link" data-bs-toggle="pill">
                         <i class="fas fa-file-alt"></i> Laporan & Evaluasi
                     </a>
@@ -201,7 +201,7 @@
                     <a href="#hr-payroll" class="nav-link" data-bs-toggle="pill">
                         <i class="fas fa-users-cog"></i> SDM & Penggajian
                     </a>
-                </li> -->
+                </li>
                 <li class="nav-item">
                     <a href="#settings" class="nav-link" data-bs-toggle="pill">
                         <i class="fas fa-cog"></i> Pengaturan Sistem
@@ -356,8 +356,7 @@
                                     <span><i class="fas fa-chart-line me-2"></i> Grafik Pertumbuhan Tanaman</span>
                                     <select class="form-select form-select-sm w-auto">
                                         <option>7 Hari Terakhir</option>
-                                        <option>30 Hari Terakhir</option>
-                                        <option>3 Bulan Terakhir</option>
+
                                     </select>
                                 </div>
                                 <div class="card-body">
@@ -2310,49 +2309,49 @@
         
         // Charts
         // Growth Chart
-        // const growthCtx = document.getElementById('growthChart').getContext('2d');
-        // const growthChart = new Chart(growthCtx, {
-        //     type: 'line',
-        //     data: {
-        //         labels: ['1 Minggu', '2 Minggu', '3 Minggu', '4 Minggu', '5 Minggu', '6 Minggu', '7 Minggu'],
-        //         datasets: [
-        //             {
-        //                 label: 'Tinggi Tanaman (cm)',
-        //                 data: [15, 25, 35, 50, 65, 80, 95],
-        //                 borderColor: '#4CAF50',
-        //                 backgroundColor: 'rgba(76, 175, 80, 0.1)',
-        //                 tension: 0.3,
-        //                 fill: true
-        //             },
-        //             {
-        //                 label: 'Jumlah Daun',
-        //                 data: [4, 6, 8, 10, 12, 14, 16],
-        //                 borderColor: '#2196F3',
-        //                 backgroundColor: 'rgba(33, 150, 243, 0.1)',
-        //                 tension: 0.3,
-        //                 fill: true
-        //             }
-        //         ]
-        //     },
-        //     options: {
-        //         responsive: true,
-        //         maintainAspectRatio: false,
-        //         plugins: {
-        //             legend: {
-        //                 position: 'top',
-        //             },
-        //             tooltip: {
-        //                 mode: 'index',
-        //                 intersect: false,
-        //             }
-        //         },
-        //         scales: {
-        //             y: {
-        //                 beginAtZero: true
-        //             }
-        //         }
-        //     }
-        // });
+        const growthCtx = document.getElementById('growthChart').getContext('2d');
+        const growthChart = new Chart(growthCtx, {
+            type: 'line',
+            data: {
+                labels: ['1 Minggu', '2 Minggu', '3 Minggu', '4 Minggu', '5 Minggu', '6 Minggu', '7 Minggu'],
+                datasets: [
+                    {
+                        label: 'Tinggi Tanaman (cm)',
+                        data: [15, 25, 35, 50, 65, 80, 95],
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Jumlah Daun',
+                        data: [4, 6, 8, 10, 12, 14, 16],
+                        borderColor: '#2196F3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
         
         // Realtime Chart
         // const realtimeCtx = document.getElementById('realtimeChart').getContext('2d');
@@ -2661,7 +2660,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function loadPage(page) {
             if (page < 1) return;
-            fetch(`/Project-rpl/public/auth/get_land.php?page=${page}`)
+            fetch(`auth/get_land_admin.php?page=${page}`)
                 .then(res => res.text())
                 .then(data => {
                     document.querySelector('#tabel-lahan tbody').innerHTML = data;
@@ -2682,7 +2681,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const searchButton = document.querySelector(".input-group button");
 
                 function loadLahan(page = 1, search = '') {
-                    fetch(`auth/get_land.php?page=${page}&search=${encodeURIComponent(search)}`)
+                    fetch(`auth/get_land_admin.php?page=${page}&search=${encodeURIComponent(search)}`)
                         .then(response => response.text())
                         .then(html => {
                             document.querySelector("#tabel-lahan tbody").innerHTML = html;
@@ -2787,25 +2786,7 @@ document.addEventListener("DOMContentLoaded", function () {
         loadPlantPage(1, keyword);
     }
 
-    // function editPlant(id) {
-    //     fetch(`auth/get_plant_detail.php?id=${id}`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             document.getElementById("editPlantId").value = data.id_tanaman;
-    //             document.getElementById("editSelectLand").value = data.land_id;
-    //             document.getElementById("editPlantName").value = data.nama_tanaman;
-    //             document.getElementById("editPlantingDate").value = data.tanggal_tanam;
-    //             document.getElementById("editHarvestTarget").value = data.target_panen;
-    //             document.getElementById("editAdditionalNotes").value = data.catatan || "";
 
-    //             const modal = new bootstrap.Modal(document.getElementById('editPlantModal'));
-    //             modal.show();
-    //         })
-    //         .catch(error => {
-    //             console.error("Gagal mengambil data tanaman:", error);
-    //             alert("Terjadi kesalahan saat mengambil data tanaman.");
-    //         });
-    // }
 
     function deletePlant(id) {
         if (confirm("Apakah Anda yakin ingin menghapus data tanaman ini?")) {
@@ -2839,416 +2820,6 @@ document.addEventListener("DOMContentLoaded", function () {
         
 
 
-    <!-- <script>
-    function tambahKeTabelLahan(data) {
-        const tbody = document.querySelector('#tabel-lahan tbody');
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${data.nama_lahan}</td>
-            <td>${data.lokasi}</td>
-            <td>${data.luas}</td>
-            <td>${data.jenis_tanaman}</td>
-            <td>${data.jenis_tanah}</td>
-            <td>${data.status}</td>
-        `;
-
-        tbody.appendChild(row);
-    }
-
-    // Contoh pemanggilan (setelah sukses kirim form via JS/AJAX):
-    tambahKeTabelLahan({
-        nama_lahan: "Lahan A",
-        lokasi: "Desa Selopanggung",
-        luas: "1000",
-        jenis_tanaman: "Padi",
-        jenis_tanah: "Lempung",
-        status: "Aktif"
-    });
-    </script> -->
-<!-- 
-<script>
-
-function editPlant(id) {
-    fetch(`./auth/get_plant_detail.php?id=${id}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Isi nilai input di dalam modal
-                document.getElementById('editIdTanaman').value = data.plant.id_tanaman;
-                document.getElementById('selectLand').value = data.plant.land_id;
-                document.getElementById('plantName').value = data.plant.nama_tanaman;
-                document.getElementById('plantingDate').value = data.plant.tanggal_tanam;
-                document.getElementById('harvestTarget').value = data.plant.target_panen;
-                document.getElementById('additionalNotes').value = data.plant.catatan;
-
-                // Tampilkan modal
-                const editModal = new bootstrap.Modal(document.getElementById('editModalPlant'));
-                editModal.show();
-            } else {
-                alert('Gagal mengambil data tanaman.');
-            }
-        })
-        .catch(err => {
-            console.error("Error:", err);
-            alert('Terjadi kesalahan saat mengambil data.');
-        });
-}
-
-</script> -->
-
-
-
-
-    <script>
-//         // Fungsi untuk fetch data dari dashboard_data_handler.php
-// async function loadDashboardData() {
-//   try {
-//     const response = await fetch('dashboard_data_handler.php');
-//     const data = await response.json();
-
-//     // Summary Cards
-//     document.querySelector('.sensor-value:nth-child(1)').textContent = `${data.summary.suhu}°C`;
-//     document.querySelector('.sensor-value:nth-child(2)').textContent = `${data.summary.kelembaban}%`;
-//     document.querySelector('.sensor-value:nth-child(3)').textContent = `${data.summary.lux}`;
-//     document.querySelector('.sensor-value:nth-child(4)').textContent = `${data.summary.ph}`;
-
-//     // Prakiraan Cuaca
-//     const cuacaLabels = ["Hari Ini", "Besok", "Lusa"];
-//     const cuacaIcons = {
-//       Cerah: 'fas fa-sun text-warning',
-//       Berawan: 'fas fa-cloud-sun text-secondary',
-//       'Hujan Ringan': 'fas fa-cloud-rain text-primary',
-//       Panas: 'fas fa-temperature-high text-danger'
-//     };
-
-//     document.querySelectorAll('#dashboard .card-body .row.text-center .col').forEach((col, i) => {
-//       col.querySelector('h6').textContent = cuacaLabels[i];
-//       col.querySelector('i').className = cuacaIcons[data.cuaca.prediksi];
-//       col.querySelector('div').textContent = `${data.summary.suhu + 2 - i}°C / ${data.summary.suhu - 4 - i}°C`;
-//       col.querySelector('small').textContent = data.cuaca.prediksi;
-//     });
-
-//     // Aktivitas Terkini
-//     const activityContainer = document.querySelector('#dashboard .card-body[style*="overflow-y"]');
-//     activityContainer.innerHTML = '';
-//     data.aktivitas.forEach(act => {
-//       const iconMap = {
-//         irigasi: 'fa-tint bg-primary',
-//         hama: 'fa-bug bg-danger',
-//         login: 'fa-user bg-info',
-//         suhu: 'fa-temperature-high bg-warning'
-//       };
-//       activityContainer.innerHTML += `
-//         <div class="d-flex mb-3">
-//           <div class="flex-shrink-0">
-//             <i class="fas ${iconMap[act.jenis] || 'fa-info'} text-white rounded-circle p-2"></i>
-//           </div>
-//           <div class="flex-grow-1 ms-3">
-//             <h6 class="mb-0">${act.deskripsi}</h6>
-//             <small class="text-muted">${act.waktu}</small>
-//           </div>
-//         </div>`;
-//     });
-
-//     // Status Lahan
-//     const lahanStatusContainer = document.querySelector('#dashboard .card .card-body .list-group');
-//     lahanStatusContainer.innerHTML = '';
-//     data.status_lahan.forEach(item => {
-//       const badgeClass = {
-//         Normal: 'bg-success',
-//         "Perlu Irigasi": 'bg-warning',
-//         Hama: 'bg-danger'
-//       }[item.status];
-
-//       lahanStatusContainer.innerHTML += `
-//         <div class="list-group-item d-flex justify-content-between align-items-center">
-//           <div>
-//             <h6 class="mb-1">${item.nama_lahan}</h6>
-//             <small class="text-muted">${item.jenis_tanaman} - ${item.luas} Ha</small>
-//           </div>
-//           <span class="status-badge ${badgeClass}">${item.status}</span>
-//         </div>`;
-//     });
-
-//   } catch (error) {
-//     console.error('Gagal memuat data dashboard:', error);
-//   }
-// }
-
-// // Jalankan saat halaman dimuat
-// document.addEventListener('DOMContentLoaded', loadDashboardData);
-//     </script>
-<!-- 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    // Load all dashboard data
-    fetchDashboardData();
-    
-    // Initialize growth chart with two datasets
-    const growthCtx = document.getElementById('growthChart').getContext('2d');
-    const growthChart = new Chart(growthCtx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: 'Usia Tanaman (hari)',
-                    data: [],
-                    backgroundColor: 'rgba(76, 175, 80, 0.2)',
-                    borderColor: 'rgba(76, 175, 80, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    yAxisID: 'y'
-                },
-                {
-                    label: 'Hari Menuju Panen',
-                    data: [],
-                    backgroundColor: 'rgba(255, 152, 0, 0.2)',
-                    borderColor: 'rgba(255, 152, 0, 1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    yAxisID: 'y1'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'Usia (hari)'
-                    }
-                },
-                y1: {
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Hari Menuju Panen'
-                    },
-                    grid: {
-                        drawOnChartArea: false
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tanggal'
-                    }
-                }
-            }
-        }
-    });
-
-    // Update growth chart when range changes
-    document.querySelector('#growthChart').closest('.card').querySelector('select').addEventListener('change', function() {
-        const range = this.value;
-        let param;
-        if (range === '7 Hari Terakhir') param = '7days';
-        else if (range === '30 Hari Terakhir') param = '30days';
-        else param = '3months';
-
-        fetch(`auth/growth_chart.php?range=${param}`)
-            .then(response => response.json())
-            .then(data => {
-                growthChart.data.labels = data.labels;
-                growthChart.data.datasets[0].data = data.ageData;
-                growthChart.data.datasets[1].data = data.harvestData;
-                growthChart.update();
-            });
-    });
-
-    // Initialize with 7 days data
-    fetch('auth/growth_chart.php?range=7days')
-        .then(response => response.json())
-        .then(data => {
-            growthChart.data.labels = data.labels;
-            growthChart.data.datasets[0].data = data.ageData;
-            growthChart.data.datasets[1].data = data.harvestData;
-            growthChart.update();
-        });
-
-    // Field selector functionality
-    document.querySelector('#fieldSelect').addEventListener('change', function() {
-        const fieldId = this.value;
-        fetchDashboardData(fieldId);
-        
-        // Update charts with field filter
-        const rangeSelect = document.querySelector('#growthChart').closest('.card').querySelector('select');
-        const range = rangeSelect.value;
-        let param;
-        if (range === '7 Hari Terakhir') param = '7days';
-        else if (range === '30 Hari Terakhir') param = '30days';
-        else param = '3months';
-
-        const url = `auth/growth_chart.php?range=${param}` + (fieldId !== 'all' ? `&lahan_id=${fieldId}` : '');
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                growthChart.data.labels = data.labels;
-                growthChart.data.datasets[0].data = data.ageData;
-                growthChart.data.datasets[1].data = data.harvestData;
-                growthChart.update();
-            });
-    });
-});
-
-function fetchDashboardData(fieldId = 'all') {
-    const url = 'auth/dashboard_data.php' + (fieldId !== 'all' ? `?lahan_id=${fieldId}` : '');
-    
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            updateSummaryCards(data.summary);
-            updateFieldStatus(data.fields);
-            updateActivities(data.activities);
-            updateWeatherForecast(data.forecast);
-            
-            // Update field selector options
-            updateFieldSelector(data.fields);
-        });
-}
-
-function updateFieldSelector(fields) {
-    const selector = document.querySelector('#fieldSelect');
-    selector.innerHTML = '<option value="all">Semua Lahan</option>';
-    
-    fields.forEach(field => {
-        const option = document.createElement('option');
-        option.value = field.id_lahan;
-        option.textContent = field.nama_lahan;
-        selector.appendChild(option);
-    });
-}
-
-function updateSummaryCards(data) {
-    document.querySelector('.sensor-value:nth-of-type(1)').textContent = `${data.temperature}°C`;
-    document.querySelector('.sensor-value:nth-of-type(2)').textContent = `${data.humidity}%`;
-    document.querySelector('.sensor-value:nth-of-type(3)').textContent = data.light;
-    document.querySelector('.sensor-value:nth-of-type(4)').textContent = data.ph;
-    
-    // Update moisture card if exists
-    const moistureCard = document.querySelector('.sensor-value:nth-of-type(5)');
-    if (moistureCard) {
-        moistureCard.textContent = `${data.moisture}%`;
-    }
-}
-
-function updateFieldStatus(fields) {
-    const container = document.querySelector('.list-group');
-    container.innerHTML = '';
-
-    fields.forEach(field => {
-        const statusClass = getStatusClass(field.status);
-        const item = document.createElement('div');
-        item.className = 'list-group-item d-flex justify-content-between align-items-center';
-        item.innerHTML = `
-            <div>
-                <h6 class="mb-1">${field.nama_lahan}</h6>
-                <small class="text-muted">${field.jenis_tanaman} - ${field.luas} Ha (${field.plant_count || 0} tanaman)</small>
-            </div>
-            <span class="badge ${statusClass}">${field.status}</span>
-        `;
-        container.appendChild(item);
-    });
-}
-
-function getStatusClass(status) {
-    switch(status) {
-        case 'Aktif': return 'bg-success';
-        case 'Maintenance': return 'bg-warning';
-        case 'Nonaktif': return 'bg-danger';
-        default: return 'bg-secondary';
-    }
-}
-
-function updateActivities(activities) {
-    const container = document.querySelector('.card-body[style*="max-height"]');
-    container.innerHTML = '';
-
-    activities.forEach(activity => {
-        const iconClass = getActivityIcon(activity.type);
-        const iconColor = getActivityColor(activity.type);
-        const item = document.createElement('div');
-        item.className = 'd-flex mb-3';
-        item.innerHTML = `
-            <div class="flex-shrink-0">
-                <i class="${iconClass} ${iconColor} rounded-circle p-2"></i>
-            </div>
-            <div class="flex-grow-1 ms-3">
-                <h6 class="mb-0">${activity.description}</h6>
-                <small class="text-muted">${formatTime(activity.timestamp)}</small>
-            </div>
-        `;
-        container.appendChild(item);
-    });
-}
-
-function getActivityIcon(type) {
-    switch(type) {
-        case 'sensor': return 'fas fa-temperature-high';
-        case 'planting': return 'fas fa-seedling';
-        default: return 'fas fa-info-circle';
-    }
-}
-
-function getActivityColor(type) {
-    switch(type) {
-        case 'sensor': return 'bg-primary text-white';
-        case 'planting': return 'bg-success text-white';
-        default: return 'bg-info text-white';
-    }
-}
-
-function formatTime(timestamp) {
-    const now = new Date();
-    const activityTime = new Date(timestamp);
-    const diff = Math.floor((now - activityTime) / 1000); // difference in seconds
-    
-    if (diff < 60) return 'Baru saja';
-    if (diff < 3600) return `${Math.floor(diff/60)} menit yang lalu`;
-    if (diff < 86400) return `${Math.floor(diff/3600)} jam yang lalu`;
-    return `${Math.floor(diff/86400)} hari yang lalu`;
-}
-
-function updateWeatherForecast(forecast) {
-    const container = document.querySelector('.card-body .row.text-center');
-    container.innerHTML = '';
-
-    forecast.forEach((day, index) => {
-        const dayNames = ['Hari Ini', 'Besok', 'Lusa'];
-        const iconClass = getWeatherIcon(day.condition);
-        const col = document.createElement('div');
-        col.className = 'col';
-        col.innerHTML = `
-            <h6>${dayNames[index] || formatDate(day.date)}</h6>
-            <i class="${iconClass} fa-2x"></i>
-            <div>${day.temp}°C / ${Math.round(day.temp - 5)}°C</div>
-            <small class="text-muted">${day.condition}</small>
-        `;
-        container.appendChild(col);
-    });
-}
-
-function getWeatherIcon(condition) {
-    if (condition.includes('Hujan')) return 'fas fa-cloud-rain text-primary';
-    if (condition.includes('Berawan')) return 'fas fa-cloud-sun text-secondary';
-    return 'fas fa-sun text-warning';
-}
-
-function formatDate(dateStr) {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('id-ID', { weekday: 'long' });
-}
-    </script> -->
 
 
 <script>

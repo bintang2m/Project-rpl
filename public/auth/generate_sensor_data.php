@@ -6,7 +6,7 @@ $db = "farming_app";
 $conn = new mysqli($host, $user, $pass, $db);
 
 $type = $_GET['type'] ?? 'temperature';
-$range = $_GET['range'] ?? 1; // default 24 jam
+$range = $_GET['range'] ?? 1;
 
 $allowedTypes = ['temperature', 'humidity', 'light', 'ph'];
 if (!in_array($type, $allowedTypes)) {
@@ -31,7 +31,10 @@ $labels = [];
 $data = [];
 while ($row = $result->fetch_assoc()) {
     $labels[] = $row['waktu'];
-    $data[] = round($row['nilai'], 2);
+    
+    // Tambahkan variasi random ringan ±0.2 agar tidak monoton
+    $noise = rand(-20, 20) / 100;
+    $data[] = round($row['nilai'] + $noise, 2);
 }
 
 echo json_encode([
